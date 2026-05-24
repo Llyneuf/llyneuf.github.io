@@ -217,7 +217,8 @@ textarea {
   width: min(100%, 1440px);
   height: auto;
   display: block;
-  transform: translateY(-4vh);
+  transform: translateY(calc(-6vh + var(--hero-lag, 0px)));
+  will-change: transform;
   filter:
     drop-shadow(0 28px 46px rgba(0, 0, 0, 0.38))
     drop-shadow(0 0 28px rgba(240, 200, 211, 0.1));
@@ -772,7 +773,7 @@ textarea {
   .hero-title__image {
     width: min(168vw, 760px);
     max-width: none;
-    transform: translate(-7%, -3vh);
+    transform: translate(-7%, calc(-5vh + var(--hero-lag, 0px)));
   }
 
   .hero__text h1 {

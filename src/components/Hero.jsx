@@ -1,10 +1,43 @@
+import { useEffect, useState } from 'react'
 import { profile } from '../data/profile'
 
 function Hero() {
+  const [scrollLag, setScrollLag] = useState(0)
+
+  useEffect(() => {
+    let frameId = 0
+
+    const updateScrollLag = () => {
+      frameId = 0
+      setScrollLag(Math.min(window.scrollY * 0.12, 80))
+    }
+
+    const handleScroll = () => {
+      if (frameId === 0) {
+        frameId = window.requestAnimationFrame(updateScrollLag)
+      }
+    }
+
+    updateScrollLag()
+    window.addEventListener('scroll', handleScroll, { passive: true })
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      if (frameId !== 0) {
+        window.cancelAnimationFrame(frameId)
+      }
+    }
+  }, [])
+
   return (
     <>
       <section className="hero-title section" aria-label="Llyneuf">
-        <img src="/title.png" alt="Llyneuf" className="hero-title__image" />
+        <img
+          src="/title.png"
+          alt="Llyneuf"
+          className="hero-title__image"
+          style={{ '--hero-lag': `${scrollLag}px` }}
+        />
       </section>
 
       <section className="hero-intro section">
