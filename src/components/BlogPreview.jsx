@@ -5,15 +5,11 @@ function BlogPreview() {
 
   return (
     <section id="blog" className="blog section">
-      <div className="section-heading section-heading--split">
+      <div className="section-heading">
         <div>
           <span className="section-heading__eyebrow">Devlog</span>
           <h2>Latest updates</h2>
         </div>
-        <p>
-          Short notes about site updates, stream plans, creative experiments
-          and the small steps that move the Llyneuf project forward.
-        </p>
       </div>
 
       <div className="blog__layout">

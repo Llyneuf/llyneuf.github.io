@@ -31,8 +31,8 @@ function Hero() {
               >
                 Twitch Channel
               </a>
-              <a href="#services" className="button button--ghost" data-umami-event="Hero Order Request">
-                Order / Request
+              <a href="#contact" className="button button--ghost" data-umami-event="Hero Order Request">
+                Contact me
               </a>
             </div>
           </div>

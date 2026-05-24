@@ -1,32 +1,29 @@
 export const projects = [
   {
-    title: 'Llyneuf Personal Site',
+    title: 'My Personal Site',
     status: 'Active',
     summary:
       'A personal web hub for identity, projects, links, streams, contact and future blog notes.',
-    role: 'Design direction, React structure, content system and GitHub Pages deployment.',
     tags: ['React', 'Vite', 'GitHub Pages', 'Personal brand'],
     links: [
-      { label: 'Live site', href: 'https://llyneuf.github.io/' },
+      { label: 'Live site', href: 'https://llyneuf.xyz/' },
       { label: 'Source', href: 'https://github.com/Llyneuf/llyneuf.github.io' },
     ],
   },
   {
-    title: 'VTuber Identity',
+    title: 'Oubliette',
     status: 'In progress',
     summary:
-      'A growing visual identity around the character, stream presence and soft-tech atmosphere.',
-    role: 'Character presentation, visual direction, landing sections and creator positioning.',
-    tags: ['VTuber', 'Streaming', 'Visual identity', 'Motion'],
-    links: [{ label: 'Twitch', href: 'https://www.twitch.tv/llyneuf' }],
+      'A first-person dungeon crawler with retro RPG aesthetics, pixel shaders and hand-crafted combat systems.',
+    tags: ['Unity', 'C#', 'Indie'],
+    links: [],
   },
   {
-    title: 'Creative Web Lab',
-    status: 'Prototype',
+    title: 'Severance',
+    status: 'Concept',
     summary:
-      'Small experiments with layouts, interactive sections and interfaces that can become future tools.',
-    role: 'Frontend prototypes, interface experiments and reusable React components.',
-    tags: ['Frontend', 'Creative coding', 'UI', 'Experiments'],
-    links: [{ label: 'GitHub', href: 'https://github.com/Llyneuf' }],
+      'A cooperative horror game built around paranoia, proximity voice and the slow dread of not knowing what is real.',
+    tags: ['Unity', 'C#', 'Co-op', 'Horror'],
+    links: [],
   },
 ]

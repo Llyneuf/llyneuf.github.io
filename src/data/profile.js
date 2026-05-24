@@ -5,7 +5,7 @@ export const profile = {
   headline: 'I build expressive web experiences, creator tools and visual worlds.',
   intro:
     'A personal hub for my projects, streams, experiments and the things I am learning while turning code, motion and virtual identity into one creative direction.',
-  email: 'llyneuftwitch@yandex.ru',
+  email: 'Llyneuf.business@proton.me',
   location: 'Online',
   availability: 'Open to small web, visual and creator-focused requests',
   facts: [
@@ -28,8 +28,8 @@ export const profile = {
     },
     {
       label: 'Telegram',
-      value: '@llyneuf',
-      href: 'https://t.me/llyneuf',
+      value: '@llyneuf_vt',
+      href: 'https://t.me/llyneuf_vt',
       featured: true,
     },
     {
@@ -39,9 +39,9 @@ export const profile = {
       featured: false,
     },
     {
-      label: 'Email',
-      value: 'llyneuftwitch@yandex.ru',
-      href: 'mailto:llyneuftwitch@yandex.ru',
+      label: 'YouTube',
+      value: '@Llyneuf',
+      href: 'https://www.youtube.com/@Llyneuf',
       featured: false,
     },
   ],

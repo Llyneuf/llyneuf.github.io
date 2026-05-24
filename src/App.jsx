@@ -1,10 +1,7 @@
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import Identity from './components/Identity'
-import Now from './components/Now'
-import Focus from './components/Focus'
 import Projects from './components/Projects'
-import Services from './components/Services'
 import BlogPreview from './components/BlogPreview'
 import Links from './components/Links'
 import Contact from './components/Contact'
@@ -18,11 +15,8 @@ function App() {
       <main>
         <Hero />
         <Identity />
-        <Now />
-        <Focus />
-        <Projects />
-        <Services />
         <BlogPreview />
+        <Projects />
         <Links />
         <Contact />
       </main>

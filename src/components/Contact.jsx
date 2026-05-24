@@ -15,7 +15,7 @@ function Contact() {
 
         <div className="contact__actions">
           <a
-            href="https://t.me/llyneuf"
+            href="https://t.me/llyneuf_vt"
             target="_blank"
             rel="noreferrer"
             className="button button--primary"
@@ -29,15 +29,6 @@ function Contact() {
             data-umami-event="Contact Email"
           >
             Email
-          </a>
-          <a
-            href="https://www.twitch.tv/llyneuf"
-            target="_blank"
-            rel="noreferrer"
-            className="button button--ghost"
-            data-umami-event="Contact Twitch"
-          >
-            Twitch
           </a>
         </div>
       </div>

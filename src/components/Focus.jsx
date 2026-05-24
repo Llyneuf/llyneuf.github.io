@@ -9,8 +9,6 @@ function Focus() {
           <h2>What people can come to me for</h2>
         </div>
         <p>
-          The site should make the practical side visible: what I can build,
-          design, shape and keep improving.
         </p>
       </div>
 

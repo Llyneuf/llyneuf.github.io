@@ -5,7 +5,7 @@ function Links() {
     <section id="links" className="links section">
       <div className="section-heading">
         <span className="section-heading__eyebrow">Links</span>
-        <h2>Where to find me</h2>
+        <h2>My Links</h2>
       </div>
 
       <div className="links__grid">
