@@ -14,13 +14,29 @@ function Contact() {
         </div>
 
         <div className="contact__actions">
-          <a href="https://t.me/llyneuf" target="_blank" rel="noreferrer" className="button button--primary">
+          <a
+            href="https://t.me/llyneuf"
+            target="_blank"
+            rel="noreferrer"
+            className="button button--primary"
+            data-umami-event="Contact Telegram"
+          >
             Telegram
           </a>
-          <a href={`mailto:${profile.email}`} className="button button--secondary">
+          <a
+            href={`mailto:${profile.email}`}
+            className="button button--secondary"
+            data-umami-event="Contact Email"
+          >
             Email
           </a>
-          <a href="https://www.twitch.tv/llyneuf" target="_blank" rel="noreferrer" className="button button--ghost">
+          <a
+            href="https://www.twitch.tv/llyneuf"
+            target="_blank"
+            rel="noreferrer"
+            className="button button--ghost"
+            data-umami-event="Contact Twitch"
+          >
             Twitch
           </a>
         </div>

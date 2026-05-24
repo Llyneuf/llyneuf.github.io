@@ -15,6 +15,7 @@ function Links() {
             target={link.href.startsWith('http') ? '_blank' : undefined}
             rel={link.href.startsWith('http') ? 'noreferrer' : undefined}
             className={link.featured ? 'links__item links__item--featured' : 'links__item'}
+            data-umami-event={`Links ${link.label}`}
             key={link.label}
           >
             <span className="links__label">{link.label}</span>

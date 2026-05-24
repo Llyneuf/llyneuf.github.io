@@ -34,7 +34,13 @@ function Projects() {
             </div>
             <div className="projects__links">
               {project.links.map((link) => (
-                <a href={link.href} target="_blank" rel="noreferrer" key={link.href}>
+                <a
+                  href={link.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  data-umami-event={`Project ${project.title} ${link.label}`}
+                  key={link.href}
+                >
                   {link.label}
                 </a>
               ))}

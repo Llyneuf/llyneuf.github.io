@@ -19,16 +19,21 @@ function Hero() {
 
           <div className="hero__actions">
             <div className="hero__buttons">
-              <a href="#projects" className="button button--primary">View Projects</a>
+              <a href="#projects" className="button button--primary" data-umami-event="Hero View Projects">
+                View Projects
+              </a>
               <a
                 href="https://www.twitch.tv/llyneuf"
                 target="_blank"
                 rel="noreferrer"
                 className="button button--secondary"
+                data-umami-event="Hero Twitch"
               >
                 Twitch Channel
               </a>
-              <a href="#services" className="button button--ghost">Order / Request</a>
+              <a href="#services" className="button button--ghost" data-umami-event="Hero Order Request">
+                Order / Request
+              </a>
             </div>
           </div>
         </div>

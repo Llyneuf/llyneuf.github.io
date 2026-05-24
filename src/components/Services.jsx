@@ -37,12 +37,19 @@ function Services() {
             references. Telegram is fastest, email is better for a longer brief.
           </p>
           <div className="services__brief-actions">
-            <a href="https://t.me/llyneuf" target="_blank" rel="noreferrer" className="button button--primary">
+            <a
+              href="https://t.me/llyneuf"
+              target="_blank"
+              rel="noreferrer"
+              className="button button--primary"
+              data-umami-event="Services Telegram"
+            >
               Message on Telegram
             </a>
             <a
               href={`mailto:${profile.email}?subject=Project%20request&body=${briefBody}`}
               className="button button--secondary"
+              data-umami-event="Services Email Brief"
             >
               Email a Brief
             </a>
