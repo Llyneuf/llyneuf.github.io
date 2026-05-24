@@ -1,33 +1,22 @@
-function Focus() {
-  const focusItems = [
-    {
-      title: 'Development',
-      description: 'Web interfaces, interactive systems and creative coding.'
-    },
-    {
-      title: 'Motion Design',
-      description: 'Animated visuals, transitions, rhythm and presentation.'
-    },
-    {
-      title: '3D / Digital Art',
-      description: 'Characters, assets, stylized forms and visual experimentation.'
-    },
-    {
-      title: 'VTubing / Streaming',
-      description: 'Live content, virtual identity and creator presence.'
-    }
-  ]
+import { skills } from '../data/services'
 
+function Focus() {
   return (
-    <section id="focus" className="focus section">
-      <div className="section-heading">
-        <span className="section-heading__eyebrow">Focus</span>
-        <h2>What I Do</h2>
+    <section id="skills" className="focus section">
+      <div className="section-heading section-heading--split">
+        <div>
+          <span className="section-heading__eyebrow">Skills</span>
+          <h2>What people can come to me for</h2>
+        </div>
+        <p>
+          The site should make the practical side visible: what I can build,
+          design, shape and keep improving.
+        </p>
       </div>
 
       <div className="focus__grid">
-        {focusItems.map((item, index) => (
-          <article className="focus__card" key={index}>
+        {skills.map((item) => (
+          <article className="focus__card" key={item.title}>
             <h3>{item.title}</h3>
             <p>{item.description}</p>
           </article>
