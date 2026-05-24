@@ -340,21 +340,24 @@ textarea {
   margin-bottom: 0;
 }
 
-/* NOW */
-
-.now__grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
-}
+/* LATEST */
 
 .now__item {
   padding: 24px;
 }
 
-.now__item span {
-  display: inline-block;
-  margin-bottom: 16px;
+.now__item--latest {
+  max-width: 760px;
+}
+
+.now__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.now__meta span {
   color: var(--green);
   font-size: 0.85rem;
   font-weight: 800;
@@ -368,15 +371,9 @@ textarea {
 }
 
 .now__item p {
-  margin: 0;
+  margin: 0 0 22px;
   color: var(--muted);
   line-height: 1.7;
-}
-
-.now__updated {
-  margin: 18px 0 0;
-  color: var(--muted);
-  font-size: 0.92rem;
 }
 
 /* SKILLS */
@@ -670,7 +667,6 @@ textarea {
   }
 
   .focus__grid,
-  .now__grid,
   .projects__grid,
   .services__grid,
   .blog__list,

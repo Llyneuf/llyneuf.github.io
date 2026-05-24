@@ -1,27 +1,32 @@
-import { now } from '../data/now'
+import { posts } from '../data/posts'
 
 function Now() {
+  const latestPost = posts[0]
+
   return (
     <section id="now" className="now section">
       <div className="section-heading section-heading--split">
         <div>
-          <span className="section-heading__eyebrow">Now</span>
-          <h2>What is happening right now</h2>
+          <span className="section-heading__eyebrow">Latest</span>
+          <h2>Latest devlog update</h2>
         </div>
-        <p>{now.intro}</p>
+        <p>
+          The newest note from the devlog, shown here so the top of the site
+          always points to the latest visible progress.
+        </p>
       </div>
 
-      <div className="now__grid">
-        {now.items.map((item) => (
-          <article className="now__item" key={item.title}>
-            <span>{item.label}</span>
-            <h3>{item.title}</h3>
-            <p>{item.text}</p>
-          </article>
-        ))}
-      </div>
-
-      <p className="now__updated">Updated {now.updated}</p>
+      <article className="now__item now__item--latest">
+        <div className="now__meta">
+          <span>{latestPost.type}</span>
+          <span>{latestPost.date}</span>
+        </div>
+        <h3>{latestPost.title}</h3>
+        <p>{latestPost.summary}</p>
+        <a href="#blog" className="button button--ghost" data-umami-event="Latest Read Devlog">
+          Read Devlog
+        </a>
+      </article>
     </section>
   )
 }
