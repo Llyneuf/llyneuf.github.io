@@ -2,16 +2,16 @@ import { profile } from '../data/profile'
 
 function Hero() {
   return (
-    <section className="hero section">
-      <div className="hero__brand">
-        <img src="/title.png" alt="Llyneuf" className="hero__brand-image" />
-      </div>
+    <>
+      <section className="hero-title section" aria-label="Llyneuf">
+        <img src="/title.png" alt="Llyneuf" className="hero-title__image" />
+      </section>
 
-      <div className="hero__content">
+      <section className="hero-intro section">
         <div className="hero__text">
           <span className="hero__eyebrow">{profile.shortRole}</span>
 
-          <h1 className="sr-only">{profile.name}</h1>
+          <h1>{profile.name}</h1>
 
           <p className="hero__headline">{profile.headline}</p>
 
@@ -32,8 +32,8 @@ function Hero() {
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   )
 }
 
