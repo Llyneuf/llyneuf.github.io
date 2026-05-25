@@ -1193,7 +1193,7 @@ textarea {
   padding: 22px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 22px;
   transition:
     transform 0.2s ease,
