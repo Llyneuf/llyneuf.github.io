@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { posts } from '../data/posts'
 
 function BlogPreview() {
@@ -6,16 +6,37 @@ function BlogPreview() {
   const [selectedPost, setSelectedPost] = useState(null)
   const scrollPositionRef = useRef(0)
 
-  const handleClosePost = () => {
+  const lockPageScroll = useCallback(() => {
+    document.body.classList.add('is-modal-open')
+    document.documentElement.classList.add('is-modal-open')
+    document.body.style.position = 'fixed'
+    document.body.style.top = `-${scrollPositionRef.current}px`
+    document.body.style.left = '0'
+    document.body.style.right = '0'
+    document.body.style.width = '100%'
+  }, [])
+
+  const unlockPageScroll = useCallback(() => {
     const scrollPosition = scrollPositionRef.current
 
+    document.body.classList.remove('is-modal-open')
+    document.documentElement.classList.remove('is-modal-open')
+    document.body.style.position = ''
+    document.body.style.top = ''
+    document.body.style.left = ''
+    document.body.style.right = ''
+    document.body.style.width = ''
+    window.scrollTo({ top: scrollPosition, left: 0, behavior: 'instant' })
+  }, [])
+
+  const handleClosePost = useCallback(() => {
     setSelectedPost(null)
     window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}`)
 
     window.requestAnimationFrame(() => {
-      window.scrollTo({ top: scrollPosition, left: 0, behavior: 'instant' })
+      unlockPageScroll()
     })
-  }
+  }, [unlockPageScroll])
 
   useEffect(() => {
     const openPostFromHash = () => {
@@ -23,6 +44,7 @@ function BlogPreview() {
       const matchedPost = posts.find((post) => post.slug === slug)
 
       if (matchedPost) {
+        scrollPositionRef.current = window.scrollY
         setSelectedPost(matchedPost)
       }
     }
@@ -46,16 +68,13 @@ function BlogPreview() {
       }
     }
 
-    document.body.classList.add('is-modal-open')
-    document.documentElement.classList.add('is-modal-open')
+    lockPageScroll()
     window.addEventListener('keydown', handleKeyDown)
 
     return () => {
-      document.body.classList.remove('is-modal-open')
-      document.documentElement.classList.remove('is-modal-open')
       window.removeEventListener('keydown', handleKeyDown)
     }
-  }, [selectedPost])
+  }, [handleClosePost, lockPageScroll, selectedPost])
 
   const handleOpenPost = (post) => {
     scrollPositionRef.current = window.scrollY
