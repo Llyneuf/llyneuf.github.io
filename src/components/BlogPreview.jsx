@@ -8,7 +8,7 @@ function BlogPreview() {
       <div className="section-heading">
         <div>
           <span className="section-heading__eyebrow">Devlog</span>
-          <h2>Latest updates</h2>
+          <h2>Latest news</h2>
         </div>
       </div>
 
@@ -27,6 +27,7 @@ function BlogPreview() {
             </div>
             <h3>{featuredPost.title}</h3>
             <p>{featuredPost.summary}</p>
+            <span className="blog__read-more">Read update</span>
           </div>
         </a>
 
@@ -47,6 +48,7 @@ function BlogPreview() {
                 </div>
                 <h3>{post.title}</h3>
                 <p>{post.summary}</p>
+                <span className="blog__read-more">Read update</span>
               </div>
             </a>
           ))}
