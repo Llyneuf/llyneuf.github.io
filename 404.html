@@ -8,6 +8,15 @@
     <meta name="color-scheme" content="dark" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <title>Page Not Found | Llyneuf</title>
+    <script>
+      const projectMatch = window.location.pathname.match(/^\/projects\/([^/]+)\/?$/)
+
+      if (projectMatch) {
+        window.location.replace(`/#/projects/${projectMatch[1]}`)
+      } else if (window.location.pathname === '/projects' || window.location.pathname === '/projects/') {
+        window.location.replace('/#/projects')
+      }
+    </script>
     <style>
       :root {
         --bg: #0d0c10;
