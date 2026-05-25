@@ -26,11 +26,14 @@
 html {
   scroll-behavior: smooth;
   overflow-x: hidden;
+  width: 100%;
 }
 
 body {
   margin: 0;
   min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
   background:
     linear-gradient(140deg, rgba(240, 200, 211, 0.07), transparent 34%),
     linear-gradient(220deg, rgba(159, 215, 229, 0.07), transparent 30%),
@@ -56,6 +59,8 @@ textarea {
 
 .site-shell {
   min-height: 100vh;
+  width: 100%;
+  overflow-x: clip;
 }
 
 .section {
@@ -206,11 +211,13 @@ textarea {
 .hero-title.section {
   width: min(100% - 40px, 1480px);
   min-height: calc(100vh - 68px);
+  max-height: calc(100vh - 68px);
   display: flex;
   align-items: center;
   justify-content: center;
   padding-top: 0;
   padding-bottom: 0;
+  overflow: hidden;
 }
 
 .hero-title__image {
@@ -494,6 +501,14 @@ textarea {
   margin-top: 22px;
 }
 
+.projects__progress {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  color: var(--muted-strong);
+  font-size: 0.96rem;
+}
+
 .projects__links {
   display: flex;
   flex-wrap: wrap;
@@ -565,6 +580,15 @@ textarea {
   transition:
     transform 0.2s ease,
     border-color 0.2s ease;
+}
+
+.blog__featured:focus-visible,
+.blog__item:focus-visible,
+.projects__links a:focus-visible,
+.links__item:focus-visible,
+.button:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 3px;
 }
 
 .blog__featured {
@@ -746,6 +770,10 @@ textarea {
 }
 
 @media (max-width: 760px) {
+  body {
+    position: relative;
+  }
+
   .section {
     width: min(100% - 28px, var(--container));
     padding: 66px 0;
@@ -766,14 +794,16 @@ textarea {
   }
 
   .hero-title.section {
-    width: min(100% - 28px, var(--container));
-    min-height: calc(100vh - 68px);
+    width: 100%;
+    min-height: 58vh;
+    max-height: 58vh;
+    padding: 0;
   }
 
   .hero-title__image {
-    width: min(168vw, 760px);
-    max-width: none;
-    transform: translate(-7%, calc(-5vh + var(--hero-lag, 0px)));
+    width: 132vw;
+    max-width: 620px;
+    transform: translate(-11vw, calc(-6vh + var(--hero-lag, 0px)));
   }
 
   .hero__text h1 {

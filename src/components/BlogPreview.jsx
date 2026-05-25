@@ -13,7 +13,12 @@ function BlogPreview() {
       </div>
 
       <div className="blog__layout">
-        <article className="blog__featured">
+        <a
+          href={`#devlog-${featuredPost.slug}`}
+          id={`devlog-${featuredPost.slug}`}
+          className="blog__featured"
+          data-umami-event={`Devlog ${featuredPost.title}`}
+        >
           <img src={featuredPost.image} alt="" className="blog__featured-image" />
           <div className="blog__featured-content">
             <div className="blog__meta">
@@ -23,11 +28,17 @@ function BlogPreview() {
             <h3>{featuredPost.title}</h3>
             <p>{featuredPost.summary}</p>
           </div>
-        </article>
+        </a>
 
         <div className="blog__list">
           {sidePosts.map((post) => (
-            <article className="blog__item" key={post.title}>
+            <a
+              href={`#devlog-${post.slug}`}
+              id={`devlog-${post.slug}`}
+              className="blog__item"
+              data-umami-event={`Devlog ${post.title}`}
+              key={post.title}
+            >
               <img src={post.image} alt="" className="blog__thumb" />
               <div className="blog__item-content">
                 <div className="blog__meta">
@@ -37,7 +48,7 @@ function BlogPreview() {
                 <h3>{post.title}</h3>
                 <p>{post.summary}</p>
               </div>
-            </article>
+            </a>
           ))}
         </div>
       </div>

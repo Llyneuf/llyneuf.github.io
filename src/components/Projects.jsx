@@ -15,13 +15,14 @@ function Projects() {
           const projectLinks = project.links.filter((link) => link.href)
 
           return (
-            <article className="projects__card" key={project.title}>
+            <article className="projects__card" id={`project-${project.slug}`} key={project.title}>
               <div className="projects__topline">
                 <span className="projects__index">{String(index + 1).padStart(2, '0')}</span>
                 <span className="projects__status">{project.status}</span>
               </div>
               <h3>{project.title}</h3>
               <p>{project.summary}</p>
+              <p className="projects__progress">{project.progress}</p>
               <div className="tag-list">
                 {project.tags.map((tag) => (
                   <span key={tag}>{tag}</span>

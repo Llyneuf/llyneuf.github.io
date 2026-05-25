@@ -1,5 +1,6 @@
 export const posts = [
   {
+    slug: 'site-opened',
     title: 'Site is opened to the public',
     date: '24-05-2026',
     type: 'Devlog',
@@ -8,6 +9,7 @@ export const posts = [
       'The first version of the site becomes a place for projects, links, stream identity and future notes.',
   },
   {
+    slug: 'new-vtuber-character',
     title: 'Making my new vtuber character',
     date: '16-05-2026',
     type: 'Process',
@@ -16,6 +18,7 @@ export const posts = [
       'Base done, now I need to make a body and a face.',
   },
   {
+    slug: 'warudo-room',
     title: 'My room, but wrong',
     date: '11-05-2026',
     type: 'Devlog',
