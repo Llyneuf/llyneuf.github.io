@@ -1,7 +1,67 @@
+import { useEffect, useRef, useState } from 'react'
 import { posts } from '../data/posts'
 
 function BlogPreview() {
   const [featuredPost, ...sidePosts] = posts
+  const [selectedPost, setSelectedPost] = useState(null)
+  const scrollPositionRef = useRef(0)
+
+  const handleClosePost = () => {
+    const scrollPosition = scrollPositionRef.current
+
+    setSelectedPost(null)
+    window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}`)
+
+    window.requestAnimationFrame(() => {
+      window.scrollTo({ top: scrollPosition, left: 0, behavior: 'instant' })
+    })
+  }
+
+  useEffect(() => {
+    const openPostFromHash = () => {
+      const slug = window.location.hash.replace('#devlog-', '')
+      const matchedPost = posts.find((post) => post.slug === slug)
+
+      if (matchedPost) {
+        setSelectedPost(matchedPost)
+      }
+    }
+
+    openPostFromHash()
+    window.addEventListener('hashchange', openPostFromHash)
+
+    return () => window.removeEventListener('hashchange', openPostFromHash)
+  }, [])
+
+  useEffect(() => {
+    if (!selectedPost) {
+      document.body.classList.remove('is-modal-open')
+      document.documentElement.classList.remove('is-modal-open')
+      return undefined
+    }
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        handleClosePost()
+      }
+    }
+
+    document.body.classList.add('is-modal-open')
+    document.documentElement.classList.add('is-modal-open')
+    window.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      document.body.classList.remove('is-modal-open')
+      document.documentElement.classList.remove('is-modal-open')
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [selectedPost])
+
+  const handleOpenPost = (post) => {
+    scrollPositionRef.current = window.scrollY
+    setSelectedPost(post)
+    window.history.replaceState(null, '', `#devlog-${post.slug}`)
+  }
 
   return (
     <section id="blog" className="blog section">
@@ -13,11 +73,12 @@ function BlogPreview() {
       </div>
 
       <div className="blog__layout">
-        <a
-          href={`#devlog-${featuredPost.slug}`}
+        <button
+          type="button"
           id={`devlog-${featuredPost.slug}`}
           className="blog__featured"
           data-umami-event={`Devlog ${featuredPost.title}`}
+          onClick={() => handleOpenPost(featuredPost)}
         >
           <img src={featuredPost.image} alt="" className="blog__featured-image" />
           <div className="blog__featured-content">
@@ -29,15 +90,16 @@ function BlogPreview() {
             <p>{featuredPost.summary}</p>
             <span className="blog__read-more">Read update</span>
           </div>
-        </a>
+        </button>
 
         <div className="blog__list">
           {sidePosts.map((post) => (
-            <a
-              href={`#devlog-${post.slug}`}
+            <button
+              type="button"
               id={`devlog-${post.slug}`}
               className="blog__item"
               data-umami-event={`Devlog ${post.title}`}
+              onClick={() => handleOpenPost(post)}
               key={post.title}
             >
               <img src={post.image} alt="" className="blog__thumb" />
@@ -50,10 +112,55 @@ function BlogPreview() {
                 <p>{post.summary}</p>
                 <span className="blog__read-more">Read update</span>
               </div>
-            </a>
+            </button>
           ))}
         </div>
       </div>
+
+      {selectedPost ? (
+        <div className="blog-modal" role="presentation" onMouseDown={handleClosePost}>
+          <article
+            className="blog-modal__dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="devlog-modal-title"
+            onMouseDown={(event) => event.stopPropagation()}
+          >
+            <button
+              type="button"
+              className="blog-modal__close"
+              aria-label="Close devlog post"
+              onClick={handleClosePost}
+            >
+              Close
+            </button>
+            <div className="blog-modal__media">
+              <img src={selectedPost.image} alt="" className="blog-modal__image" />
+              <div className="blog-modal__media-content">
+                <div className="blog__meta">
+                  <span>{selectedPost.type}</span>
+                  <span>{selectedPost.date}</span>
+                </div>
+                <h3 id="devlog-modal-title">{selectedPost.title}</h3>
+              </div>
+            </div>
+            <div className="blog-modal__content">
+              {selectedPost.content.map((block) => {
+                if (block.type === 'image') {
+                  return (
+                    <figure className="blog-modal__figure" key={`${block.src}-${block.caption}`}>
+                      <img src={block.src} alt={block.alt} />
+                      {block.caption ? <figcaption>{block.caption}</figcaption> : null}
+                    </figure>
+                  )
+                }
+
+                return <p key={block.value}>{block.value}</p>
+              })}
+            </div>
+          </article>
+        </div>
+      ) : null}
     </section>
   )
 }
