@@ -1,21 +1,54 @@
 import { projects } from '../data/projects'
 
-function Projects() {
+function Projects({ hub = false }) {
   return (
-    <section id="projects" className="projects section">
+    <section id="projects" className={hub ? 'projects projects--hub section' : 'projects section'}>
       <div className="section-heading">
         <div>
-          <span className="section-heading__eyebrow">Projects</span>
-          <h2>My Projects</h2>
+          {hub ? <a href="/" className="projects__home-link">Back to homepage</a> : null}
+          {!hub ? <span className="section-heading__eyebrow">Projects</span> : null}
+          <h2>{hub ? 'All Projects' : 'My Projects'}</h2>
+          {hub ? (
+            <p>
+              A full overview of active work, concepts and stored project directions.
+            </p>
+          ) : null}
         </div>
       </div>
+
+      {hub ? (
+        <div className="projects__hub-chibi-row" aria-hidden="true">
+          <img src="/projects_chibi.png" alt="" className="projects__hub-chibi" />
+        </div>
+      ) : null}
 
       <div className="projects__grid">
         {projects.map((project, index) => {
           const projectLinks = project.links.filter((link) => link.href)
+          const projectHref = `/#/projects/${project.slug}`
+          const cardDetails = project.cardDetails ?? project.details ?? []
+
+          const handleOpenProject = () => {
+            window.location.href = projectHref
+          }
+
+          const handleProjectKeyDown = (event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault()
+              handleOpenProject()
+            }
+          }
 
           return (
-            <article className="projects__card" id={`project-${project.slug}`} key={project.title}>
+            <article
+              className="projects__card"
+              id={`project-${project.slug}`}
+              role="link"
+              tabIndex={0}
+              onClick={handleOpenProject}
+              onKeyDown={handleProjectKeyDown}
+              key={project.title}
+            >
               {project.image ? (
                 <img src={project.image} alt={project.imageAlt} className="projects__image" />
               ) : (
@@ -30,9 +63,9 @@ function Projects() {
               <h3>{project.title}</h3>
               <p>{project.summary}</p>
               <p className="projects__progress">{project.progress}</p>
-              {project.details?.length > 0 && (
+              {cardDetails.length > 0 && (
                 <ul className="projects__details">
-                  {project.details.map((detail) => (
+                  {cardDetails.map((detail) => (
                     <li key={detail}>{detail}</li>
                   ))}
                 </ul>
@@ -50,6 +83,7 @@ function Projects() {
                       target="_blank"
                       rel="noreferrer"
                       data-umami-event={`Project ${project.title} ${link.label}`}
+                      onClick={(event) => event.stopPropagation()}
                       key={link.href}
                     >
                       {link.label}
@@ -57,10 +91,26 @@ function Projects() {
                   ))}
                 </div>
               )}
+              <a
+                href={projectHref}
+                className="projects__open"
+                data-umami-event={`Project ${project.title} Open Page`}
+                onClick={(event) => event.stopPropagation()}
+              >
+                Open project
+              </a>
             </article>
           )
         })}
       </div>
+
+      {!hub ? (
+        <div className="projects__all">
+          <a href="/#/projects" className="button button--secondary" data-umami-event="Projects All Projects">
+            All projects
+          </a>
+        </div>
+      ) : null}
     </section>
   )
 }

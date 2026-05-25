@@ -2,14 +2,14 @@ function Navbar() {
   return (
     <header className="navbar">
       <div className="navbar__inner">
-        <a href="#" className="navbar__logo">Llyneuf</a>
+        <a href="/" className="navbar__logo">Llyneuf</a>
 
         <nav className="navbar__nav">
-          <a href="#about">About</a>
-          <a href="#blog">Blog</a>
-          <a href="#projects">Projects</a>
-          <a href="#links">Links</a>
-          <a href="#contact">Contact</a>
+          <a href="/#about">About</a>
+          <a href="/#blog">Blog</a>
+          <a href="/#/projects">Projects</a>
+          <a href="/#links">Links</a>
+          <a href="/#contact">Contact</a>
         </nav>
       </div>
     </header>

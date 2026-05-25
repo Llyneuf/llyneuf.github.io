@@ -100,9 +100,10 @@ function BlogPreview() {
           onClick={() => handleOpenPost(featuredPost)}
         >
           <img src={featuredPost.image} alt="" className="blog__featured-image" />
+          <span className="blog__latest">Latest</span>
           <div className="blog__featured-content">
             <div className="blog__meta">
-              <span>{featuredPost.type}</span>
+              <span className={`blog__type blog__type--${featuredPost.type.toLowerCase()}`}>{featuredPost.type}</span>
               <span>{featuredPost.date}</span>
             </div>
             <h3>{featuredPost.title}</h3>
@@ -124,7 +125,7 @@ function BlogPreview() {
               <img src={post.image} alt="" className="blog__thumb" />
               <div className="blog__item-content">
                 <div className="blog__meta">
-                  <span>{post.type}</span>
+                  <span className={`blog__type blog__type--${post.type.toLowerCase()}`}>{post.type}</span>
                   <span>{post.date}</span>
                 </div>
                 <h3>{post.title}</h3>
