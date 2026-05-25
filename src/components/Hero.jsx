@@ -40,7 +40,7 @@ function Hero() {
         />
       </section>
 
-      <section className="hero-intro section">
+      <section id="about" className="hero-intro section">
         <div className="hero__text">
           <span className="hero__eyebrow">{profile.shortRole}</span>
 
@@ -48,7 +48,12 @@ function Hero() {
 
           <p className="hero__headline">{profile.headline}</p>
 
-          <p className="hero__description">{profile.intro}</p>
+          <div className="hero__description">
+            <p>{profile.intro}</p>
+            {profile.story.map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
+            ))}
+          </div>
 
           <div className="hero__actions">
             <div className="hero__buttons">

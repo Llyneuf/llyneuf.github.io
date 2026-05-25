@@ -1,6 +1,5 @@
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
-import Identity from './components/Identity'
 import Projects from './components/Projects'
 import BlogPreview from './components/BlogPreview'
 import Links from './components/Links'
@@ -14,7 +13,6 @@ function App() {
       <Navbar />
       <main>
         <Hero />
-        <Identity />
         <BlogPreview />
         <Projects />
         <Links />
