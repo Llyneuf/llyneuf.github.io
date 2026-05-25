@@ -801,9 +801,9 @@ textarea {
   }
 
   .hero-title__image {
-    width: 104vw;
-    max-width: 430px;
-    transform: translate(-4vw, calc(-4vh + var(--hero-lag, 0px)));
+    width: 92vw;
+    max-width: 380px;
+    transform: translateY(calc(-4vh + var(--hero-lag, 0px)));
   }
 
   .hero__text h1 {
