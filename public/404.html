@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <title>Page Not Found | Llyneuf</title>
+    <style>
+      :root {
+        --bg: #0d0c10;
+        --surface: rgba(255, 255, 255, 0.045);
+        --surface-strong: rgba(255, 255, 255, 0.075);
+        --line: rgba(255, 255, 255, 0.1);
+        --line-strong: rgba(255, 255, 255, 0.18);
+        --text: #f6f1f4;
+        --muted: #bdb5c4;
+        --muted-strong: #d7d2dc;
+        --rose: #f0c8d3;
+        --cyan: #9fd7e5;
+        --ink: #151019;
+        --radius: 8px;
+        --container: 1180px;
+      }
+
+      * {
+        box-sizing: border-box;
+        letter-spacing: 0;
+      }
+
+      html,
+      body {
+        min-height: 100%;
+        overflow-x: hidden;
+      }
+
+      body {
+        margin: 0;
+        overflow-x: hidden;
+        background:
+          linear-gradient(140deg, rgba(240, 200, 211, 0.07), transparent 34%),
+          linear-gradient(220deg, rgba(159, 215, 229, 0.07), transparent 30%),
+          linear-gradient(180deg, #121018 0%, var(--bg) 44%, #0b0b0e 100%);
+        color: var(--text);
+        font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .page {
+        min-height: 100vh;
+        overflow-x: hidden;
+        display: grid;
+        grid-template-rows: auto 1fr;
+      }
+
+      .navbar {
+        position: relative;
+        z-index: 2;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+        background: rgba(13, 12, 16, 0.78);
+        backdrop-filter: blur(16px);
+      }
+
+      .navbar__inner {
+        width: calc(100% - 40px);
+        max-width: var(--container);
+        min-height: 68px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+      }
+
+      .navbar__logo {
+        font-size: 1.1rem;
+        font-weight: 800;
+      }
+
+      .navbar__link {
+        color: var(--muted);
+        font-size: 0.95rem;
+        transition: color 0.2s ease;
+      }
+
+      .navbar__link:hover {
+        color: var(--text);
+      }
+
+      .not-found {
+        width: calc(100% - 40px);
+        max-width: var(--container);
+        margin: 0 auto;
+        padding: 56px 0 72px;
+        display: grid;
+        grid-template-columns: minmax(0, 0.78fr) minmax(360px, 0.82fr);
+        align-items: center;
+        gap: 48px;
+      }
+
+      .not-found__copy {
+        min-width: 0;
+        max-width: 620px;
+      }
+
+      .not-found__eyebrow {
+        display: inline-block;
+        margin-bottom: 14px;
+        color: var(--cyan);
+        font-size: 0.9rem;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+
+      .not-found h1 {
+        margin: 0;
+        font-size: clamp(3.8rem, 13vw, 9.5rem);
+        line-height: 0.9;
+      }
+
+      .not-found__headline {
+        margin: 24px 0 0;
+        max-width: min(100%, 560px);
+        color: var(--text);
+        font-size: clamp(1.35rem, 3vw, 2rem);
+        font-weight: 800;
+        line-height: 1.2;
+        overflow-wrap: anywhere;
+      }
+
+      .not-found__text {
+        margin: 16px 0 0;
+        max-width: min(100%, 560px);
+        color: var(--muted);
+        font-size: 1.04rem;
+        line-height: 1.78;
+        overflow-wrap: anywhere;
+      }
+
+      .not-found__actions {
+        margin-top: 28px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .button {
+        min-height: 48px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 20px;
+        border: 1px solid transparent;
+        border-radius: var(--radius);
+        font-weight: 800;
+        transition:
+          transform 0.2s ease,
+          background 0.2s ease,
+          border-color 0.2s ease;
+      }
+
+      .button:hover {
+        transform: translateY(-2px);
+      }
+
+      .button--primary {
+        background: var(--rose);
+        color: var(--ink);
+      }
+
+      .button--secondary {
+        border-color: var(--line);
+        background: var(--surface-strong);
+        color: var(--muted-strong);
+      }
+
+      .button--secondary:hover {
+        border-color: var(--line-strong);
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      .not-found__visual {
+        position: relative;
+        min-width: 0;
+        display: flex;
+        justify-content: center;
+      }
+
+      .not-found__visual::before {
+        position: absolute;
+        inset: 12% 6% 2%;
+        z-index: -1;
+        border-radius: 50%;
+        background: rgba(240, 200, 211, 0.08);
+        filter: blur(34px);
+        content: "";
+      }
+
+      .not-found__visual img {
+        width: min(100%, 620px);
+        height: auto;
+        display: block;
+        filter:
+          drop-shadow(0 26px 46px rgba(0, 0, 0, 0.3))
+          drop-shadow(0 0 26px rgba(240, 200, 211, 0.08));
+      }
+
+      @media (max-width: 900px) {
+        .not-found {
+          grid-template-columns: 1fr;
+          gap: 24px;
+          padding-top: 42px;
+        }
+
+        .not-found__copy {
+          max-width: none;
+        }
+
+        .not-found__visual {
+          order: -1;
+        }
+
+        .not-found__visual img {
+          width: min(100%, 460px);
+        }
+      }
+
+      @media (max-width: 560px) {
+        .navbar__inner {
+          width: calc(100% - 28px);
+        }
+
+        .not-found {
+          width: 70vw;
+          max-width: 280px;
+          display: block;
+          padding: 28px 0 48px;
+        }
+
+        .navbar__link {
+          display: none;
+        }
+
+        .not-found__visual {
+          width: 100%;
+          max-width: 250px;
+          margin: 0 auto 42px;
+          display: block;
+        }
+
+        .not-found__visual::before {
+          inset: 14% 0 0;
+        }
+
+        .not-found__visual img {
+          width: 100%;
+          max-width: 100%;
+        }
+
+        .not-found__copy,
+        .not-found__headline,
+        .not-found__text,
+        .not-found__actions {
+          width: 100%;
+          max-width: 100%;
+          min-width: 0;
+        }
+
+        .not-found h1 {
+          font-size: 3.45rem;
+        }
+
+        .not-found__headline {
+          font-size: 1.12rem;
+          line-height: 1.32;
+          word-break: break-word;
+        }
+
+        .not-found__actions {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .button {
+          width: 100%;
+          max-width: 100%;
+          min-width: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header class="navbar">
+        <div class="navbar__inner">
+          <a href="/" class="navbar__logo">Llyneuf</a>
+          <a href="/" class="navbar__link">Back to home</a>
+        </div>
+      </header>
+
+      <main class="not-found">
+        <section class="not-found__copy" aria-labelledby="not-found-title">
+          <span class="not-found__eyebrow">404 / Page not found</span>
+          <h1 id="not-found-title">Lost?</h1>
+          <p class="not-found__headline">This page slipped out of the site map.</p>
+          <p class="not-found__text">
+            The link may be old, mistyped, or waiting for a future project page. You can return to the
+            main hub and keep exploring from there.
+          </p>
+          <div class="not-found__actions">
+            <a href="/" class="button button--primary">Back to home</a>
+            <a href="/#projects" class="button button--secondary">View projects</a>
+          </div>
+        </section>
+
+        <div class="not-found__visual" aria-hidden="true">
+          <img src="/404.png" alt="" />
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

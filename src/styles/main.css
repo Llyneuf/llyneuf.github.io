@@ -356,11 +356,12 @@ textarea {
 
 .projects__grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 18px;
 }
 
 .projects__card {
+  grid-column: span 2;
   min-height: 320px;
   padding: 24px;
   display: flex;
@@ -368,6 +369,41 @@ textarea {
   transition:
     transform 0.2s ease,
     border-color 0.2s ease;
+}
+
+.projects__card:nth-child(1),
+.projects__card:nth-child(2) {
+  grid-column: span 3;
+}
+
+.projects__image {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  margin-bottom: 20px;
+  object-fit: cover;
+  display: block;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.projects__image--placeholder {
+  display: flex;
+  align-items: flex-end;
+  padding: 16px;
+  overflow: hidden;
+  background:
+    linear-gradient(135deg, rgba(159, 215, 229, 0.13), transparent 42%),
+    linear-gradient(315deg, rgba(240, 200, 211, 0.12), transparent 48%),
+    rgba(255, 255, 255, 0.035);
+}
+
+.projects__image--placeholder span {
+  max-width: 12ch;
+  color: rgba(246, 241, 244, 0.72);
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1.05;
 }
 
 .projects__topline {
@@ -409,6 +445,33 @@ textarea {
   border-top: 1px solid var(--line);
   color: var(--muted-strong);
   font-size: 0.96rem;
+}
+
+.projects__details {
+  margin: 18px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+  list-style: none;
+  color: var(--muted);
+  line-height: 1.58;
+  font-size: 0.95rem;
+}
+
+.projects__details li {
+  position: relative;
+  padding-left: 16px;
+}
+
+.projects__details li::before {
+  position: absolute;
+  left: 0;
+  top: 0.72em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--cyan);
+  content: "";
 }
 
 .projects__links {
@@ -804,7 +867,16 @@ textarea {
     justify-items: start;
   }
 
-  .projects__grid,
+  .projects__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .projects__card,
+  .projects__card:nth-child(1),
+  .projects__card:nth-child(2) {
+    grid-column: auto;
+  }
+
   .links__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
