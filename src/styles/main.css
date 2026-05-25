@@ -795,15 +795,15 @@ textarea {
 
   .hero-title.section {
     width: 100%;
-    min-height: 58vh;
-    max-height: 58vh;
+    min-height: 46vh;
+    max-height: 46vh;
     padding: 0;
   }
 
   .hero-title__image {
-    width: 132vw;
-    max-width: 620px;
-    transform: translate(-11vw, calc(-6vh + var(--hero-lag, 0px)));
+    width: 104vw;
+    max-width: 430px;
+    transform: translate(-4vw, calc(-4vh + var(--hero-lag, 0px)));
   }
 
   .hero__text h1 {
