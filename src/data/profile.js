@@ -29,8 +29,8 @@ export const profile = {
     },
     {
       label: 'Telegram',
-      value: '@llyneuf_vt',
-      href: 'https://t.me/llyneuf_vt',
+      value: '@llyneuf',
+      href: 'https://t.me/llyneuf',
       description: 'Fast updates and direct contact',
       accent: '#2aabee',
       featured: true,

@@ -108,6 +108,7 @@ function App() {
   const basePath = `/${route.language}`
   const currentLanguagePath = route.pathSegments.length > 0 ? `/${route.pathSegments.join('/')}` : '/'
   const isProjectsHub = route.pathSegments.length === 1 && route.pathSegments[0] === 'projects'
+  const isDevlogHub = route.pathSegments.length === 1 && route.pathSegments[0] === 'devlog'
   const projectSlug =
     route.pathSegments.length === 2 && route.pathSegments[0] === 'projects' ? route.pathSegments[1] : null
 
@@ -133,12 +134,24 @@ function App() {
     )
   }
 
+  if (isDevlogHub) {
+    return (
+      <div className="site-shell">
+        <Navbar language={route.language} basePath={basePath} currentLanguagePath={currentLanguagePath} />
+        <main>
+          <BlogPreview hub language={route.language} basePath={basePath} />
+        </main>
+        <Footer />
+      </div>
+    )
+  }
+
   return (
     <div className="site-shell">
       <Navbar language={route.language} basePath={basePath} currentLanguagePath={currentLanguagePath} />
       <main>
         <Hero language={route.language} basePath={basePath} />
-        <BlogPreview language={route.language} />
+        <BlogPreview language={route.language} basePath={basePath} limit={3} showArchiveLink />
         <Projects language={route.language} basePath={basePath} />
         <Links language={route.language} />
         <Contact language={route.language} />

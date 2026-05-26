@@ -1,8 +1,16 @@
 import { getUiText } from '../data/i18n'
 import { profile } from '../data/profile'
+import { useState } from 'react'
 
 function Contact({ language }) {
   const t = getUiText(language)
+  const [copied, setCopied] = useState(false)
+
+  const handleCopyEmail = async () => {
+    await navigator.clipboard.writeText(profile.email)
+    setCopied(true)
+    window.setTimeout(() => setCopied(false), 900)
+  }
 
   return (
     <section id="contact" className="contact section">
@@ -25,13 +33,15 @@ function Contact({ language }) {
           >
             Telegram
           </a>
-          <a
-            href={`mailto:${profile.email}`}
-            className="button button--secondary"
+          <button
+            type="button"
+            className={`button button--secondary contact__copy-button${copied ? ' is-copied' : ''}`}
             data-umami-event="Contact Email"
+            onClick={handleCopyEmail}
+            aria-label={copied ? t.emailCopied : t.copyEmail}
           >
-            Email
-          </a>
+            {t.copyEmail}
+          </button>
         </div>
       </div>
     </section>
