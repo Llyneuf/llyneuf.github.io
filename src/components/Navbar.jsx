@@ -29,6 +29,19 @@ function Navbar({ language, basePath, currentLanguagePath }) {
             ))}
           </span>
         </nav>
+
+        <span className="navbar__mobile-languages" aria-label="Language switcher">
+          {languageOptions.map((item) => (
+            <a
+              href={`/${item}${languageTargetPath}`}
+              className={item === language ? 'is-active' : ''}
+              aria-current={item === language ? 'page' : undefined}
+              key={item}
+            >
+              {item.toUpperCase()}
+            </a>
+          ))}
+        </span>
       </div>
     </header>
   )
