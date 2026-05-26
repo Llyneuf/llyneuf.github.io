@@ -28,10 +28,9 @@ const devlogContent = Object.entries(devlogContentFiles).reduce((contentBySlug, 
 
   const [, folder, language] = match
   const parsed = parseFrontmatter(content)
-  const slug = field(parsed.data, 'slug', folder)
 
-  contentBySlug[slug] = {
-    ...(contentBySlug[slug] ?? {}),
+  contentBySlug[folder] = {
+    ...(contentBySlug[folder] ?? {}),
     folder,
     [language]: parsed,
   }
@@ -45,10 +44,11 @@ function getLocalizedPost(entry, language) {
 
 export function getDevlogPosts(language) {
   return Object.entries(devlogContent)
-    .map(([slug, entry]) => {
+    .map(([folder, entry]) => {
       const content = getLocalizedPost(entry, language)
       const frontmatter = content?.data ?? {}
       const date = field(frontmatter, 'date', entry.folder)
+      const slug = field(frontmatter, 'slug', folder)
 
       return {
         slug,
@@ -59,10 +59,16 @@ export function getDevlogPosts(language) {
         cardSummary: field(frontmatter, 'cardSummary', ''),
         cardImage: field(frontmatter, 'cardImage', ''),
         cardImageAlt: field(frontmatter, 'cardImageAlt', ''),
+        cardImageFit: field(frontmatter, 'cardImageFit', 'cover'),
+        cardImagePosition: field(frontmatter, 'cardImagePosition', 'center'),
+        cardImageScale: field(frontmatter, 'cardImageScale', '1'),
         pageTitle: field(frontmatter, 'pageTitle', field(frontmatter, 'cardTitle', slug)),
         pageType: field(frontmatter, 'pageType', field(frontmatter, 'cardType', '')),
         pageImage: field(frontmatter, 'pageImage', ''),
         pageImageAlt: field(frontmatter, 'pageImageAlt', ''),
+        pageImageFit: field(frontmatter, 'pageImageFit', 'cover'),
+        pageImagePosition: field(frontmatter, 'pageImagePosition', 'center'),
+        pageImageScale: field(frontmatter, 'pageImageScale', '1'),
         pageMarkdown: content?.body ?? '',
       }
     })

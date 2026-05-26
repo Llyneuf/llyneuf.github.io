@@ -9,6 +9,9 @@ cardImageAlt: PSX-inspired stream room made for Warudo
 pageTitle: My room, but wrong
 pageType: Devlog
 pageImage: /11-05-2026.png
+pageImageFit: contain
+pageImageScale: 2.5
+pageImageCenter: 1%
 pageImageAlt: PSX-inspired stream room made for Warudo
 ---
 

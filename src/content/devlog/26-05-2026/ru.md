@@ -5,10 +5,14 @@ cardTitle: Сайт теперь поддерживает два языка - р
 cardType: Devlog
 cardSummary: В верхней части сайта добавлен переключатель языков RU/EN. Также планирую добавить поддержку испанского языка позже.
 cardImage: /26-05-2026.png
+cardImageFit: contain
+cardImageScale: 1.2
 cardImageAlt: Сайт теперь поддерживает два языка - русский и английский
 pageTitle: Сайт теперь поддерживает два языка - русский и английский
 pageType: Devlog
 pageImage: /26-05-2026.png
+pageImageFit: contain
+pageImageScale: 1.2
 pageImageAlt: Сайт теперь поддерживает два языка - русский и английский
 ---
 ## Все изменения:

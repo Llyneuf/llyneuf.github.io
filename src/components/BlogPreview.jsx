@@ -1,11 +1,11 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { getUiText } from '../data/i18n'
 import { getDevlogPosts } from '../data/devlogContent'
 import MarkdownContent from './MarkdownContent'
 
 function BlogPreview({ language, basePath = '', hub = false, limit, showArchiveLink = false }) {
   const t = getUiText(language)
-  const allPosts = useMemo(() => getDevlogPosts(language), [language])
+  const allPosts = getDevlogPosts(language)
   const posts = limit ? allPosts.slice(0, limit) : allPosts
   const [featuredPost, ...sidePosts] = posts
   const [selectedPostSlug, setSelectedPostSlug] = useState(null)
@@ -15,6 +15,11 @@ function BlogPreview({ language, basePath = '', hub = false, limit, showArchiveL
   const postRefs = useRef({})
   const skipNextAutoScrollRef = useRef(false)
   const getTypeClassName = (type) => type.toLowerCase().replace(/[^a-z0-9]+/g, '-')
+  const getImageStyle = (fit, position, scale) => ({
+    objectFit: fit,
+    objectPosition: position,
+    transform: scale && scale !== '1' ? `scale(${scale})` : undefined,
+  })
 
   const lockPageScroll = useCallback(() => {
     document.body.classList.add('is-modal-open')
@@ -234,11 +239,18 @@ function BlogPreview({ language, basePath = '', hub = false, limit, showArchiveL
           data-umami-event={`Devlog ${featuredPost.cardTitle}`}
           onClick={() => handleOpenPost(featuredPost)}
         >
-          <img
-            src={featuredPost.cardImage}
-            alt={featuredPost.cardImageAlt}
-            className={hub ? 'blog__thumb' : 'blog__featured-image'}
-          />
+          <span className={hub ? 'blog__thumb-frame' : 'blog__featured-image-frame'}>
+            <img
+              src={featuredPost.cardImage}
+              alt={featuredPost.cardImageAlt}
+              className={hub ? 'blog__thumb' : 'blog__featured-image'}
+              style={getImageStyle(
+                featuredPost.cardImageFit,
+                featuredPost.cardImagePosition,
+                featuredPost.cardImageScale,
+              )}
+            />
+          </span>
           {!hub ? <span className="blog__latest">{t.devlogLatest}</span> : null}
           <div className={hub ? 'blog__item-content' : 'blog__featured-content'}>
             <div className="blog__meta">
@@ -263,7 +275,14 @@ function BlogPreview({ language, basePath = '', hub = false, limit, showArchiveL
               onClick={() => handleOpenPost(post)}
               key={post.slug}
             >
-              <img src={post.cardImage} alt={post.cardImageAlt} className="blog__thumb" />
+              <span className="blog__thumb-frame">
+                <img
+                  src={post.cardImage}
+                  alt={post.cardImageAlt}
+                  className="blog__thumb"
+                  style={getImageStyle(post.cardImageFit, post.cardImagePosition, post.cardImageScale)}
+                />
+              </span>
               <div className="blog__item-content">
                 <div className="blog__meta">
                   <span className={`blog__type blog__type--${getTypeClassName(post.cardType)}`}>{post.cardType}</span>
@@ -287,52 +306,61 @@ function BlogPreview({ language, basePath = '', hub = false, limit, showArchiveL
       ) : null}
 
       {selectedPostSlug ? (
-        <div className="blog-modal" role="presentation" ref={modalRef} onMouseDown={handleClosePost}>
-          <div
-            className="blog-modal__dialog blog-modal__dialog--feed"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="devlog-modal-title"
-            onMouseDown={(event) => event.stopPropagation()}
-          >
-            <div className="blog-modal__controls">
-              <button type="button" aria-label={t.devlogClose} onClick={handleClosePost}>
-                ×
-              </button>
-              <button type="button" aria-label={t.devlogPreviousPost} onClick={() => handleJumpPost(-1)}>
-                ↑
-              </button>
-              <button type="button" aria-label={t.devlogNextPost} onClick={() => handleJumpPost(1)}>
-                ↓
-              </button>
-            </div>
+        <div className="blog-modal" role="presentation">
+          <div className="blog-modal__controls" onMouseDown={(event) => event.stopPropagation()}>
+            <button type="button" aria-label={t.devlogClose} onClick={handleClosePost}>
+              ×
+            </button>
+            <button type="button" aria-label={t.devlogPreviousPost} onClick={() => handleJumpPost(-1)}>
+              ↑
+            </button>
+            <button type="button" aria-label={t.devlogNextPost} onClick={() => handleJumpPost(1)}>
+              ↓
+            </button>
+          </div>
 
-            <div className="blog-modal__feed" onMouseDown={handleClosePost}>
-              {allPosts.map((post) => (
-                <article
-                  className="blog-modal__post"
-                  id={`devlog-modal-${post.slug}`}
-                  onMouseDown={(event) => event.stopPropagation()}
-                  ref={(element) => {
-                    postRefs.current[post.slug] = element
-                  }}
-                  key={post.slug}
-                >
-                  <div className="blog-modal__media">
-                    <img src={post.pageImage} alt={post.pageImageAlt} className="blog-modal__image" />
-                    <div className="blog-modal__media-content">
-                      <div className="blog__meta">
-                        <span>{post.pageType}</span>
-                        <span>{post.date}</span>
+          <div className="blog-modal__scroller" ref={modalRef} onMouseDown={handleClosePost}>
+            <div
+              className="blog-modal__dialog blog-modal__dialog--feed"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="devlog-modal-title"
+              onMouseDown={(event) => event.stopPropagation()}
+            >
+              <div className="blog-modal__feed" onMouseDown={handleClosePost}>
+                {allPosts.map((post) => (
+                  <article
+                    className="blog-modal__post"
+                    id={`devlog-modal-${post.slug}`}
+                    onMouseDown={(event) => event.stopPropagation()}
+                    ref={(element) => {
+                      postRefs.current[post.slug] = element
+                    }}
+                    key={post.slug}
+                  >
+                    <div className="blog-modal__media">
+                      <img
+                        src={post.pageImage}
+                        alt={post.pageImageAlt}
+                        className="blog-modal__image"
+                        style={getImageStyle(post.pageImageFit, post.pageImagePosition, post.pageImageScale)}
+                      />
+                      <div className="blog-modal__media-content">
+                        <div className="blog__meta">
+                          <span>{post.pageType}</span>
+                          <span>{post.date}</span>
+                        </div>
+                        <h3 id={post.slug === selectedPostSlug ? 'devlog-modal-title' : undefined}>
+                          {post.pageTitle}
+                        </h3>
                       </div>
-                      <h3 id={post.slug === selectedPostSlug ? 'devlog-modal-title' : undefined}>{post.pageTitle}</h3>
                     </div>
-                  </div>
-                  <div className="blog-modal__content">
-                    <MarkdownContent source={post.pageMarkdown} />
-                  </div>
-                </article>
-              ))}
+                    <div className="blog-modal__content">
+                      <MarkdownContent source={post.pageMarkdown} />
+                    </div>
+                  </article>
+                ))}
+              </div>
             </div>
           </div>
         </div>

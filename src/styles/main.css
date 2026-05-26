@@ -287,12 +287,13 @@ textarea {
   width: 20px;
   height: 14px;
   display: block;
+  transform: translateY(-1px);
 }
 
 .navbar__mobile-toggle span::before,
 .navbar__mobile-toggle span::after {
   position: absolute;
-  top: 5px;
+  top: 50%;
   width: 14px;
   height: 4px;
   border-radius: 999px;
@@ -302,21 +303,21 @@ textarea {
 }
 
 .navbar__mobile-toggle span::before {
-  left: 0;
-  transform: rotate(45deg);
+  left: 50%;
+  transform: translate(-86%, -50%) rotate(45deg);
 }
 
 .navbar__mobile-toggle span::after {
-  right: 0;
-  transform: rotate(-45deg);
+  right: 50%;
+  transform: translate(86%, -50%) rotate(-45deg);
 }
 
 .navbar__mobile-toggle.is-open span::before {
-  transform: rotate(-45deg);
+  transform: translate(-86%, -50%) rotate(-45deg);
 }
 
 .navbar__mobile-toggle.is-open span::after {
-  transform: rotate(45deg);
+  transform: translate(86%, -50%) rotate(45deg);
 }
 
 /* HERO */
@@ -1065,14 +1066,18 @@ textarea {
   text-transform: uppercase;
 }
 
-.blog__featured-image {
+.blog__featured-image-frame {
   position: absolute;
   inset: 0;
+  z-index: -2;
+  overflow: hidden;
+}
+
+.blog__featured-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
-  z-index: -2;
   transition: transform 0.35s ease;
 }
 
@@ -1113,6 +1118,14 @@ textarea {
   background:
     linear-gradient(120deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.025)),
     var(--surface);
+}
+
+.blog__thumb-frame {
+  width: 100%;
+  height: 100%;
+  min-height: 160px;
+  overflow: hidden;
+  display: block;
 }
 
 .blog__thumb {
@@ -1175,12 +1188,18 @@ textarea {
   position: fixed;
   inset: 0;
   z-index: 100;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 28px 18px 72px;
+  overflow: hidden;
   background: rgba(7, 7, 10, 0.62);
   backdrop-filter: blur(18px);
   overscroll-behavior: contain;
+}
+
+.blog-modal__scroller {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 28px 18px 72px;
   scrollbar-color: rgba(159, 215, 229, 0.72) rgba(255, 255, 255, 0.055);
   scrollbar-width: thin;
 }
@@ -1226,32 +1245,31 @@ textarea {
 
 .blog-modal__controls {
   position: fixed;
-  top: 50%;
+  top: calc(46% - 52px);
   right: max(18px, calc((100vw - 1280px) / 2 - 58px));
   z-index: 3;
   display: grid;
   gap: 8px;
   width: 44px;
-  transform: translateY(-50%);
   pointer-events: none;
 }
 
-.blog-modal::-webkit-scrollbar {
+.blog-modal__scroller::-webkit-scrollbar {
   width: 10px;
 }
 
-.blog-modal::-webkit-scrollbar-track {
+.blog-modal__scroller::-webkit-scrollbar-track {
   background: rgba(255, 255, 255, 0.045);
 }
 
-.blog-modal::-webkit-scrollbar-thumb {
+.blog-modal__scroller::-webkit-scrollbar-thumb {
   border: 2px solid rgba(7, 7, 10, 0.62);
   border-radius: 999px;
   background:
     linear-gradient(180deg, rgba(159, 215, 229, 0.86), rgba(240, 200, 211, 0.78));
 }
 
-.blog-modal::-webkit-scrollbar-thumb:hover {
+.blog-modal__scroller::-webkit-scrollbar-thumb:hover {
   background:
     linear-gradient(180deg, rgba(159, 215, 229, 1), rgba(240, 200, 211, 0.92));
 }
@@ -1758,7 +1776,13 @@ textarea {
     object-fit: cover;
   }
 
-  .blog-modal {
+  .blog__thumb-frame {
+    aspect-ratio: 16 / 9;
+    height: auto;
+    min-height: 0;
+  }
+
+  .blog-modal__scroller {
     padding: 14px 12px 60px;
   }
 
@@ -1767,16 +1791,7 @@ textarea {
   }
 
   .blog-modal__controls {
-    top: 50%;
-    right: 12px;
-    width: 38px;
-    transform: translateY(-50%);
-  }
-
-  .blog-modal__controls button {
-    width: 38px;
-    height: 38px;
-    font-size: 1.18rem;
+    display: none;
   }
 
   .blog-modal__media {
