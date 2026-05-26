@@ -9,12 +9,21 @@
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <title>Page Not Found | Llyneuf</title>
     <script>
+      const languageRouteMatch = window.location.pathname.match(/^\/(ru|en|es)(\/.*)?\/?$/)
       const projectMatch = window.location.pathname.match(/^\/projects\/([^/]+)\/?$/)
 
-      if (projectMatch) {
-        window.location.replace(`/#/projects/${projectMatch[1]}`)
+      if (languageRouteMatch) {
+        window.sessionStorage.setItem(
+          'llyneuf:redirect-path',
+          `${window.location.pathname}${window.location.search}${window.location.hash}`,
+        )
+        window.location.replace('/')
+      } else if (projectMatch) {
+        window.sessionStorage.setItem('llyneuf:redirect-path', `/ru/projects/${projectMatch[1]}`)
+        window.location.replace('/')
       } else if (window.location.pathname === '/projects' || window.location.pathname === '/projects/') {
-        window.location.replace('/#/projects')
+        window.sessionStorage.setItem('llyneuf:redirect-path', '/ru/projects')
+        window.location.replace('/')
       }
     </script>
     <style>
@@ -333,8 +342,8 @@
     <div class="page">
       <header class="navbar">
         <div class="navbar__inner">
-          <a href="/" class="navbar__logo">Llyneuf</a>
-          <a href="/" class="navbar__link">Back to home</a>
+          <a href="/ru/" class="navbar__logo">Llyneuf</a>
+          <a href="/ru/" class="navbar__link">Back to home</a>
         </div>
       </header>
 
@@ -348,8 +357,8 @@
             main hub and keep exploring from there.
           </p>
           <div class="not-found__actions">
-            <a href="/" class="button button--primary">Back to home</a>
-            <a href="/#/projects" class="button button--secondary">View projects</a>
+            <a href="/ru/" class="button button--primary">Back to home</a>
+            <a href="/ru/projects" class="button button--secondary">View projects</a>
           </div>
         </section>
 
