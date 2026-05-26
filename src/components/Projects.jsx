@@ -1,16 +1,20 @@
 import { projects } from '../data/projects'
+import { getUiText } from '../data/i18n'
+import { getProjectCard } from '../data/projectView'
 
-function Projects({ hub = false }) {
+function Projects({ hub = false, language, basePath }) {
+  const t = getUiText(language)
+
   return (
     <section id="projects" className={hub ? 'projects projects--hub section' : 'projects section'}>
       <div className="section-heading">
         <div>
-          {hub ? <a href="/" className="projects__home-link">Back to homepage</a> : null}
-          {!hub ? <span className="section-heading__eyebrow">Projects</span> : null}
-          <h2>{hub ? 'All Projects' : 'My Projects'}</h2>
+          {hub ? <a href={`${basePath}/`} className="projects__home-link">{t.backToHomepage}</a> : null}
+          {!hub ? <span className="section-heading__eyebrow">{t.projectsEyebrow}</span> : null}
+          <h2>{hub ? t.allProjects : t.myProjects}</h2>
           {hub ? (
             <p>
-              A full overview of active work, concepts and stored project directions.
+              {t.projectsHubDescription}
             </p>
           ) : null}
         </div>
@@ -24,9 +28,9 @@ function Projects({ hub = false }) {
 
       <div className="projects__grid">
         {projects.map((project, index) => {
+          const card = getProjectCard(project, language)
           const projectLinks = project.links.filter((link) => link.href)
-          const projectHref = `/#/projects/${project.slug}`
-          const cardDetails = project.cardDetails ?? project.details ?? []
+          const projectHref = `${basePath}/projects/${project.slug}`
 
           const handleOpenProject = () => {
             window.location.href = projectHref
@@ -47,34 +51,36 @@ function Projects({ hub = false }) {
               tabIndex={0}
               onClick={handleOpenProject}
               onKeyDown={handleProjectKeyDown}
-              key={project.title}
+              key={project.slug}
             >
-              {project.image ? (
-                <img src={project.image} alt={project.imageAlt} className="projects__image" />
+              {card.image ? (
+                <img src={card.image} alt={card.imageAlt} className="projects__image" />
               ) : (
                 <div className="projects__image projects__image--placeholder" aria-hidden="true">
-                  <span>{project.title}</span>
+                  <span>{card.title}</span>
                 </div>
               )}
               <div className="projects__topline">
                 <span className="projects__index">{String(index + 1).padStart(2, '0')}</span>
-                <span className="projects__status">{project.status}</span>
+                {card.status && <span className="projects__status">{card.status}</span>}
               </div>
-              <h3>{project.title}</h3>
-              <p>{project.summary}</p>
-              <p className="projects__progress">{project.progress}</p>
-              {cardDetails.length > 0 && (
+              <h3>{card.title}</h3>
+              {card.summary && <p>{card.summary}</p>}
+              {card.progress && <p className="projects__progress">{card.progress}</p>}
+              {card.details.length > 0 && (
                 <ul className="projects__details">
-                  {cardDetails.map((detail) => (
+                  {card.details.map((detail) => (
                     <li key={detail}>{detail}</li>
                   ))}
                 </ul>
               )}
-              <div className="tag-list">
-                {project.tags.map((tag) => (
-                  <span key={tag}>{tag}</span>
-                ))}
-              </div>
+              {card.tags.length > 0 && (
+                <div className="tag-list">
+                  {card.tags.map((tag) => (
+                    <span key={tag}>{tag}</span>
+                  ))}
+                </div>
+              )}
               {projectLinks.length > 0 && (
                 <div className="projects__links">
                   {projectLinks.map((link) => (
@@ -82,7 +88,7 @@ function Projects({ hub = false }) {
                       href={link.href}
                       target="_blank"
                       rel="noreferrer"
-                      data-umami-event={`Project ${project.title} ${link.label}`}
+                      data-umami-event={`Project ${card.title} ${link.label}`}
                       onClick={(event) => event.stopPropagation()}
                       key={link.href}
                     >
@@ -94,10 +100,10 @@ function Projects({ hub = false }) {
               <a
                 href={projectHref}
                 className="projects__open"
-                data-umami-event={`Project ${project.title} Open Page`}
+                data-umami-event={`Project ${card.title} Open Page`}
                 onClick={(event) => event.stopPropagation()}
               >
-                Open project
+                {t.openProject}
               </a>
             </article>
           )
@@ -106,8 +112,8 @@ function Projects({ hub = false }) {
 
       {!hub ? (
         <div className="projects__all">
-          <a href="/#/projects" className="button button--secondary" data-umami-event="Projects All Projects">
-            All projects
+          <a href={`${basePath}/projects`} className="button button--secondary" data-umami-event="Projects All Projects">
+            {t.allProjects}
           </a>
         </div>
       ) : null}

@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Llyneuf Content Editor</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="editor-shell">
+      <aside class="sidebar">
+        <div class="sidebar__header">
+          <span>Content</span>
+          <strong>Projects</strong>
+        </div>
+        <div id="projectList" class="project-list" aria-label="Project list"></div>
+      </aside>
+
+      <main class="workspace">
+        <header class="toolbar">
+          <div>
+            <span id="currentSlug" class="toolbar__slug">No project selected</span>
+            <h1>Project editor</h1>
+          </div>
+          <div class="toolbar__actions">
+            <label class="language-select">
+              Language
+              <select id="languageSelect">
+                <option value="ru">RU</option>
+                <option value="en">EN</option>
+                <option value="es">ES</option>
+              </select>
+            </label>
+            <span id="saveState" class="save-state">Idle</span>
+            <button id="saveButton" type="button">Save</button>
+          </div>
+        </header>
+
+        <section class="editor-grid">
+          <form id="projectForm" class="form-panel">
+            <section class="form-section">
+              <h2>Card</h2>
+              <label>
+                Card title
+                <input id="cardTitleInput" name="cardTitle" type="text" autocomplete="off" />
+              </label>
+
+              <label>
+                Card status
+                <input id="cardStatusInput" name="cardStatus" type="text" autocomplete="off" />
+              </label>
+
+              <label>
+                Card summary
+                <textarea id="cardSummaryInput" name="cardSummary" rows="3"></textarea>
+              </label>
+
+              <label>
+                Card progress
+                <textarea id="cardProgressInput" name="cardProgress" rows="3"></textarea>
+              </label>
+
+              <div class="field-row">
+                <label>
+                  Card image
+                  <input id="cardImageInput" name="cardImage" type="text" list="assetList" autocomplete="off" />
+                </label>
+
+                <label>
+                  Card image alt
+                  <input id="cardImageAltInput" name="cardImageAlt" type="text" autocomplete="off" />
+                </label>
+              </div>
+
+              <label>
+                Card tags
+                <textarea id="cardTagsInput" name="cardTags" rows="4" placeholder="One tag per line. Use [] to remove all tags."></textarea>
+              </label>
+
+              <label>
+                Card details
+                <textarea id="cardDetailsInput" name="cardDetails" rows="5" placeholder="One detail per line."></textarea>
+              </label>
+            </section>
+
+            <section class="form-section">
+              <h2>Project page</h2>
+            <label>
+              Page title
+              <input id="pageTitleInput" name="pageTitle" type="text" autocomplete="off" />
+            </label>
+
+            <label>
+              Page status
+              <input id="pageStatusInput" name="pageStatus" type="text" autocomplete="off" />
+            </label>
+
+            <label>
+              Page summary
+              <textarea id="pageSummaryInput" name="pageSummary" rows="3"></textarea>
+            </label>
+
+            <label>
+              Page progress
+              <textarea id="pageProgressInput" name="pageProgress" rows="3"></textarea>
+            </label>
+
+            <div class="field-row">
+              <label>
+                Page image
+                <input id="pageImageInput" name="pageImage" type="text" list="assetList" autocomplete="off" />
+              </label>
+
+              <label>
+                Page image alt
+                <input id="pageImageAltInput" name="pageImageAlt" type="text" autocomplete="off" />
+              </label>
+            </div>
+
+            <datalist id="assetList"></datalist>
+
+            <label>
+              Page tags
+              <textarea id="pageTagsInput" name="pageTags" rows="4" placeholder="One tag per line. Use [] to remove all tags."></textarea>
+            </label>
+            </section>
+
+            <label class="body-field">
+              Markdown body
+              <textarea id="bodyInput" name="body" spellcheck="false"></textarea>
+            </label>
+          </form>
+
+          <section class="preview-panel" aria-label="Project preview">
+            <div class="project-preview">
+              <div class="project-preview__copy">
+                <p id="previewStatus" class="eyebrow"></p>
+                <h2 id="previewTitle"></h2>
+                <p id="previewSummary" class="lead"></p>
+                <p id="previewProgress" class="progress"></p>
+                <div id="previewTags" class="tag-list"></div>
+              </div>
+              <img id="previewImage" class="project-preview__image" alt="" />
+            </div>
+            <div id="markdownPreview" class="markdown-preview"></div>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

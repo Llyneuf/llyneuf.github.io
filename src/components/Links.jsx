@@ -1,3 +1,4 @@
+import { getUiText } from '../data/i18n'
 import { profile } from '../data/profile'
 
 const iconPaths = {
@@ -11,12 +12,14 @@ const iconPaths = {
     'M21.6 7.2s-.2-1.5-.8-2.1c-.8-.8-1.7-.8-2.1-.9C15.8 4 12 4 12 4s-3.8 0-6.7.2c-.4 0-1.3.1-2.1.9-.6.6-.8 2.1-.8 2.1S2 9 2 10.9v1.7c0 1.9.4 3.7.4 3.7s.2 1.5.8 2.1c.8.8 1.9.8 2.4.9 1.8.2 6.4.2 6.4.2s3.8 0 6.7-.2c.4 0 1.3-.1 2.1-.9.6-.6.8-2.1.8-2.1s.4-1.8.4-3.7v-1.7c0-1.9-.4-3.7-.4-3.7ZM10 14.8V8.7l5.2 3.1L10 14.8Z',
 }
 
-function Links() {
+function Links({ language }) {
+  const t = getUiText(language)
+
   return (
     <section id="links" className="links section">
       <div className="section-heading">
-        <span className="section-heading__eyebrow">Links</span>
-        <h2>My Links</h2>
+        <span className="section-heading__eyebrow">{t.linksEyebrow}</span>
+        <h2>{t.myLinks}</h2>
       </div>
 
       <div className="links__grid">
@@ -38,7 +41,7 @@ function Links() {
             <span>
               <span className="links__label">{link.label}</span>
               <span className="links__value">{link.value}</span>
-              <span className="links__description">{link.description}</span>
+              <span className="links__description">{t.socialDescriptions[link.label] ?? link.description}</span>
             </span>
           </a>
         ))}

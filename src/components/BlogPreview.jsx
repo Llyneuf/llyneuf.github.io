@@ -1,10 +1,15 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { posts } from '../data/posts'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { getUiText } from '../data/i18n'
+import { getDevlogPosts } from '../data/devlogContent'
+import MarkdownContent from './MarkdownContent'
 
-function BlogPreview() {
+function BlogPreview({ language }) {
+  const t = getUiText(language)
+  const posts = useMemo(() => getDevlogPosts(language), [language])
   const [featuredPost, ...sidePosts] = posts
   const [selectedPost, setSelectedPost] = useState(null)
   const scrollPositionRef = useRef(0)
+  const getTypeClassName = (type) => type.toLowerCase().replace(/[^a-z0-9]+/g, '-')
 
   const lockPageScroll = useCallback(() => {
     document.body.classList.add('is-modal-open')
@@ -53,7 +58,7 @@ function BlogPreview() {
     window.addEventListener('hashchange', openPostFromHash)
 
     return () => window.removeEventListener('hashchange', openPostFromHash)
-  }, [])
+  }, [posts])
 
   useEffect(() => {
     if (!selectedPost) {
@@ -82,12 +87,16 @@ function BlogPreview() {
     window.history.replaceState(null, '', `#devlog-${post.slug}`)
   }
 
+  if (!featuredPost) {
+    return null
+  }
+
   return (
     <section id="blog" className="blog section">
       <div className="section-heading">
         <div>
-          <span className="section-heading__eyebrow">Devlog</span>
-          <h2>Latest news</h2>
+          <span className="section-heading__eyebrow">{t.devlogEyebrow}</span>
+          <h2>{t.devlogTitle}</h2>
         </div>
       </div>
 
@@ -96,19 +105,21 @@ function BlogPreview() {
           type="button"
           id={`devlog-${featuredPost.slug}`}
           className="blog__featured"
-          data-umami-event={`Devlog ${featuredPost.title}`}
+          data-umami-event={`Devlog ${featuredPost.cardTitle}`}
           onClick={() => handleOpenPost(featuredPost)}
         >
-          <img src={featuredPost.image} alt="" className="blog__featured-image" />
-          <span className="blog__latest">Latest</span>
+          <img src={featuredPost.cardImage} alt={featuredPost.cardImageAlt} className="blog__featured-image" />
+          <span className="blog__latest">{t.devlogLatest}</span>
           <div className="blog__featured-content">
             <div className="blog__meta">
-              <span className={`blog__type blog__type--${featuredPost.type.toLowerCase()}`}>{featuredPost.type}</span>
+              <span className={`blog__type blog__type--${getTypeClassName(featuredPost.cardType)}`}>
+                {featuredPost.cardType}
+              </span>
               <span>{featuredPost.date}</span>
             </div>
-            <h3>{featuredPost.title}</h3>
-            <p>{featuredPost.summary}</p>
-            <span className="blog__read-more">Read update</span>
+            <h3>{featuredPost.cardTitle}</h3>
+            <p>{featuredPost.cardSummary}</p>
+            <span className="blog__read-more">{t.devlogReadMore}</span>
           </div>
         </button>
 
@@ -118,19 +129,19 @@ function BlogPreview() {
               type="button"
               id={`devlog-${post.slug}`}
               className="blog__item"
-              data-umami-event={`Devlog ${post.title}`}
+              data-umami-event={`Devlog ${post.cardTitle}`}
               onClick={() => handleOpenPost(post)}
-              key={post.title}
+              key={post.slug}
             >
-              <img src={post.image} alt="" className="blog__thumb" />
+              <img src={post.cardImage} alt={post.cardImageAlt} className="blog__thumb" />
               <div className="blog__item-content">
                 <div className="blog__meta">
-                  <span className={`blog__type blog__type--${post.type.toLowerCase()}`}>{post.type}</span>
+                  <span className={`blog__type blog__type--${getTypeClassName(post.cardType)}`}>{post.cardType}</span>
                   <span>{post.date}</span>
                 </div>
-                <h3>{post.title}</h3>
-                <p>{post.summary}</p>
-                <span className="blog__read-more">Read update</span>
+                <h3>{post.cardTitle}</h3>
+                <p>{post.cardSummary}</p>
+                <span className="blog__read-more">{t.devlogReadMore}</span>
               </div>
             </button>
           ))}
@@ -149,34 +160,23 @@ function BlogPreview() {
             <button
               type="button"
               className="blog-modal__close"
-              aria-label="Close devlog post"
+              aria-label={t.devlogClose}
               onClick={handleClosePost}
             >
-              Close
+              {t.devlogClose}
             </button>
             <div className="blog-modal__media">
-              <img src={selectedPost.image} alt="" className="blog-modal__image" />
+              <img src={selectedPost.pageImage} alt={selectedPost.pageImageAlt} className="blog-modal__image" />
               <div className="blog-modal__media-content">
                 <div className="blog__meta">
-                  <span>{selectedPost.type}</span>
+                  <span>{selectedPost.pageType}</span>
                   <span>{selectedPost.date}</span>
                 </div>
-                <h3 id="devlog-modal-title">{selectedPost.title}</h3>
+                <h3 id="devlog-modal-title">{selectedPost.pageTitle}</h3>
               </div>
             </div>
             <div className="blog-modal__content">
-              {selectedPost.content.map((block) => {
-                if (block.type === 'image') {
-                  return (
-                    <figure className="blog-modal__figure" key={`${block.src}-${block.caption}`}>
-                      <img src={block.src} alt={block.alt} />
-                      {block.caption ? <figcaption>{block.caption}</figcaption> : null}
-                    </figure>
-                  )
-                }
-
-                return <p key={block.value}>{block.value}</p>
-              })}
+              <MarkdownContent source={selectedPost.pageMarkdown} />
             </div>
           </article>
         </div>

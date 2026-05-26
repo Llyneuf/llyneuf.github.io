@@ -1,3 +1,32 @@
+---
+cardTitle: My Personal Site
+cardStatus: Active
+cardSummary: A personal web hub for identity, projects, streams, links, contact and devlog notes.
+cardProgress: Public v1 is live on the custom domain. Current work is polish, clearer content and better project context.
+cardImage: /project_site.png
+cardImageAlt: Screenshot of Llyneuf's current personal website
+cardTags:
+  - React
+  - Vite
+  - GitHub Pages
+  - Personal brand
+cardDetails:
+  - React + Vite site deployed through GitHub Pages.
+  - Custom domain, social previews, sitemap, analytics and devlog are already connected.
+  - Next: richer project entries, better mobile checks and more real updates.
+pageTitle: My Personal Site
+pageStatus: Active
+pageSummary: A personal web hub for identity, projects, streams, links, contact and devlog notes.
+pageProgress: Public v1 is live on the custom domain. Current work is polish, clearer content and better project context.
+pageImage: /project_site.png
+pageImageAlt: Screenshot of Llyneuf's current personal website
+pageTags:
+  - React
+  - Vite
+  - GitHub Pages
+  - Personal brand
+---
+
 ## Overview
 
 This site is my public home base: a place for projects, devlog notes, stream links, contact points and small experiments that are too connected to keep scattered across different platforms.

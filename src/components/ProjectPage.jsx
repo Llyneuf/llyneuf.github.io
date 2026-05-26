@@ -1,8 +1,10 @@
 import { projects } from '../data/projects'
-import { projectContent } from '../data/projectContent'
+import { getUiText } from '../data/i18n'
+import { getProjectPage } from '../data/projectView'
 import MarkdownContent from './MarkdownContent'
 
-function ProjectPage({ slug }) {
+function ProjectPage({ slug, language, basePath }) {
+  const t = getUiText(language)
   const project = projects.find((item) => item.slug === slug)
   const projectIndex = projects.findIndex((item) => item.slug === slug)
   const previousProject = projectIndex > -1 ? projects[(projectIndex - 1 + projects.length) % projects.length] : null
@@ -10,17 +12,17 @@ function ProjectPage({ slug }) {
 
   const projectNav = previousProject && nextProject ? (
     <nav className="project-page__pager" aria-label="Project navigation">
-      <a href={`/#/projects/${previousProject.slug}`} className="project-page__pager-link">
-        <span>Previous</span>
+      <a href={`${basePath}/projects/${previousProject.slug}`} className="project-page__pager-link">
+        <span>{t.previous}</span>
         <span className="project-page__pager-title">
           <strong aria-hidden="true">{'\u2190'}</strong>
-          {previousProject.title}
+          {getProjectPage(previousProject, language).title}
         </span>
       </a>
-      <a href={`/#/projects/${nextProject.slug}`} className="project-page__pager-link project-page__pager-link--next">
-        <span>Next</span>
+      <a href={`${basePath}/projects/${nextProject.slug}`} className="project-page__pager-link project-page__pager-link--next">
+        <span>{t.next}</span>
         <span className="project-page__pager-title">
-          {nextProject.title}
+          {getProjectPage(nextProject, language).title}
           <strong aria-hidden="true">{'\u2192'}</strong>
         </span>
       </a>
@@ -30,58 +32,56 @@ function ProjectPage({ slug }) {
   if (!project) {
     return (
       <main className="project-page section">
-        <a href="/#/projects" className="project-page__back">Back to projects</a>
-        <p className="project-page__eyebrow">Project not found</p>
-        <h1>Lost project</h1>
+        <a href={`${basePath}/projects`} className="project-page__back">{t.backToProjects}</a>
+        <p className="project-page__eyebrow">{t.projectNotFound}</p>
+        <h1>{t.lostProject}</h1>
         <p className="project-page__lead">
-          This project page does not exist yet. The projects overview is still the best place to continue.
+          {t.lostProjectText}
         </p>
       </main>
     )
   }
 
   const projectLinks = project.links.filter((link) => link.href)
-  const pageLead = project.pageSummary ?? project.summary
-  const pageProgress = project.pageProgress ?? project.progress
-  const markdown = projectContent[project.content ?? project.slug]
-  const pageDescription = markdown ? [] : (project.pageDescription ?? [])
-  const pageDetails = markdown ? [] : (project.pageDetails ?? project.details ?? [])
-  const hasProjectNotes = Boolean(markdown) || pageDescription.length > 0 || pageDetails.length > 0
+  const page = getProjectPage(project, language)
+  const pageDescription = page.markdown ? [] : (project.pageDescription ?? [])
+  const pageDetails = page.markdown ? [] : (project.pageDetails ?? project.details ?? [])
+  const hasProjectNotes = Boolean(page.markdown) || pageDescription.length > 0 || pageDetails.length > 0
 
   return (
     <main className="project-page section">
-      <a href="/#/projects" className="project-page__back">Back to projects</a>
+      <a href={`${basePath}/projects`} className="project-page__back">{t.backToProjects}</a>
       {projectNav}
 
       <header className="project-page__hero">
         <div className="project-page__copy">
-          <p className="project-page__eyebrow">{project.status}</p>
-          <h1>{project.title}</h1>
-          <p className="project-page__lead">{pageLead}</p>
-          <p className="project-page__progress">{pageProgress}</p>
+          {page.status && <p className="project-page__eyebrow">{page.status}</p>}
+          <h1>{page.title}</h1>
+          {page.summary && <p className="project-page__lead">{page.summary}</p>}
+          {page.progress && <p className="project-page__progress">{page.progress}</p>}
 
-          <div className="tag-list">
-            {project.tags.map((tag) => (
-              <span key={tag}>{tag}</span>
-            ))}
-          </div>
+          {page.tags.length > 0 && (
+            <div className="tag-list">
+              {page.tags.map((tag) => (
+                <span key={tag}>{tag}</span>
+              ))}
+            </div>
+          )}
         </div>
 
-        {project.image ? (
-          <img src={project.image} alt={project.imageAlt} className="project-page__image" />
-        ) : (
+        {page.image ? (
+          <img src={page.image} alt={page.imageAlt} className="project-page__image" />
+        ) : !page.hasImageOverride ? (
           <div className="project-page__image project-page__image--placeholder" aria-hidden="true">
-            <span>{project.title}</span>
+            <span>{page.title}</span>
           </div>
-        )}
+        ) : null}
       </header>
 
       {hasProjectNotes && (
         <section className="project-page__section">
-          <p className="project-page__eyebrow">Project notes</p>
-          <h2>What matters here</h2>
-          {markdown ? (
-            <MarkdownContent source={markdown} />
+          {page.markdown ? (
+            <MarkdownContent source={page.markdown} />
           ) : pageDescription.length > 0 && (
             <div className="project-page__description">
               {pageDescription.map((paragraph) => (
@@ -101,7 +101,7 @@ function ProjectPage({ slug }) {
 
       {projectLinks.length > 0 && (
         <section className="project-page__section">
-          <p className="project-page__eyebrow">Links</p>
+          <p className="project-page__eyebrow">{t.links}</p>
           <div className="project-page__links">
             {projectLinks.map((link) => (
               <a href={link.href} target="_blank" rel="noreferrer" className="button button--secondary" key={link.href}>

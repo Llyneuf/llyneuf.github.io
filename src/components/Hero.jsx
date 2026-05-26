@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
-import { profile } from '../data/profile'
+import { getUiText } from '../data/i18n'
 
-function Hero() {
+function Hero({ language, basePath }) {
+  const t = getUiText(language)
   const [scrollLag, setScrollLag] = useState(0)
 
   useEffect(() => {
@@ -42,23 +43,23 @@ function Hero() {
 
       <section id="about" className="hero-intro section">
         <div className="hero__text">
-          <span className="hero__eyebrow">{profile.shortRole}</span>
+          <span className="hero__eyebrow">{t.heroRole}</span>
 
-          <h1>{profile.name}</h1>
+          <h1>Llyneuf</h1>
 
-          <p className="hero__headline">{profile.headline}</p>
+          <p className="hero__headline">{t.heroHeadline}</p>
 
           <div className="hero__description">
-            <p>{profile.intro}</p>
-            {profile.story.map((paragraph) => (
+            <p>{t.heroIntro}</p>
+            {t.heroStory.map((paragraph) => (
               <p key={paragraph}>{paragraph}</p>
             ))}
           </div>
 
           <div className="hero__actions">
             <div className="hero__buttons">
-              <a href="#projects" className="button button--primary" data-umami-event="Hero View Projects">
-                View Projects
+              <a href={`${basePath}/#projects`} className="button button--primary" data-umami-event="Hero View Projects">
+                {t.viewProjects}
               </a>
               <a
                 href="https://www.twitch.tv/llyneuf"
@@ -67,10 +68,10 @@ function Hero() {
                 className="button button--secondary"
                 data-umami-event="Hero Twitch"
               >
-                Twitch Channel
+                {t.twitchChannel}
               </a>
-              <a href="#contact" className="button button--ghost" data-umami-event="Hero Order Request">
-                Contact me
+              <a href={`${basePath}/#contact`} className="button button--ghost" data-umami-event="Hero Order Request">
+                {t.contactMe}
               </a>
             </div>
           </div>
