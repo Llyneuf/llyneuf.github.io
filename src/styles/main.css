@@ -283,17 +283,40 @@ textarea {
 }
 
 .navbar__mobile-toggle span {
-  width: 18px;
-  height: 18px;
+  position: relative;
+  width: 20px;
+  height: 14px;
   display: block;
-  border-right: 4px solid currentColor;
-  border-bottom: 4px solid currentColor;
-  transform: translateY(-4px) rotate(45deg);
+}
+
+.navbar__mobile-toggle span::before,
+.navbar__mobile-toggle span::after {
+  position: absolute;
+  top: 5px;
+  width: 14px;
+  height: 4px;
+  border-radius: 999px;
+  background: currentColor;
+  content: "";
   transition: transform 0.2s ease;
 }
 
-.navbar__mobile-toggle.is-open span {
-  transform: translateY(4px) rotate(225deg);
+.navbar__mobile-toggle span::before {
+  left: 0;
+  transform: rotate(45deg);
+}
+
+.navbar__mobile-toggle span::after {
+  right: 0;
+  transform: rotate(-45deg);
+}
+
+.navbar__mobile-toggle.is-open span::before {
+  transform: rotate(-45deg);
+}
+
+.navbar__mobile-toggle.is-open span::after {
+  transform: rotate(45deg);
 }
 
 /* HERO */
@@ -1202,14 +1225,14 @@ textarea {
 }
 
 .blog-modal__controls {
-  position: sticky;
-  top: calc(50vh - 70px);
+  position: fixed;
+  top: 50%;
+  right: max(18px, calc((100vw - 1280px) / 2 - 58px));
   z-index: 3;
   display: grid;
   gap: 8px;
   width: 44px;
-  height: 0;
-  margin-left: calc(100% + 16px);
+  transform: translateY(-50%);
   pointer-events: none;
 }
 
@@ -1601,8 +1624,8 @@ textarea {
   }
 
   .navbar__mobile-toggle {
-    width: 42px;
-    height: 42px;
+    width: 40px;
+    height: 40px;
     display: grid;
     place-items: center;
     border: 1px solid var(--line);
@@ -1727,6 +1750,14 @@ textarea {
     grid-template-columns: 1fr;
   }
 
+  .blog__thumb {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    height: auto;
+    min-height: 0;
+    object-fit: cover;
+  }
+
   .blog-modal {
     padding: 14px 12px 60px;
   }
@@ -1736,9 +1767,10 @@ textarea {
   }
 
   .blog-modal__controls {
-    top: calc(50vh - 62px);
+    top: 50%;
+    right: 12px;
     width: 38px;
-    margin-left: calc(100% - 38px);
+    transform: translateY(-50%);
   }
 
   .blog-modal__controls button {
