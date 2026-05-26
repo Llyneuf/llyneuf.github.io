@@ -248,6 +248,14 @@ textarea {
   display: none;
 }
 
+.navbar__mobile-toggle {
+  display: none;
+}
+
+.navbar__mobile-menu {
+  display: none;
+}
+
 .navbar__languages a {
   padding: 4px 7px;
   border: 1px solid transparent;
@@ -272,6 +280,20 @@ textarea {
 .navbar__mobile-languages a.is-active {
   border-color: rgba(157, 228, 246, 0.35);
   color: var(--text);
+}
+
+.navbar__mobile-toggle span {
+  width: 18px;
+  height: 18px;
+  display: block;
+  border-right: 4px solid currentColor;
+  border-bottom: 4px solid currentColor;
+  transform: translateY(-4px) rotate(45deg);
+  transition: transform 0.2s ease;
+}
+
+.navbar__mobile-toggle.is-open span {
+  transform: translateY(4px) rotate(225deg);
 }
 
 /* HERO */
@@ -1180,14 +1202,14 @@ textarea {
 }
 
 .blog-modal__controls {
-  position: fixed;
-  top: 50%;
-  right: max(18px, calc((100vw - 1280px) / 2 - 58px));
+  position: sticky;
+  top: calc(50vh - 70px);
   z-index: 3;
   display: grid;
   gap: 8px;
   width: 44px;
-  transform: translateY(-50%);
+  height: 0;
+  margin-left: calc(100% + 16px);
   pointer-events: none;
 }
 
@@ -1578,10 +1600,48 @@ textarea {
     display: none;
   }
 
+  .navbar__mobile-toggle {
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text);
+    cursor: pointer;
+  }
+
   .navbar__mobile-languages {
     display: inline-flex;
     align-items: center;
     gap: 6px;
+  }
+
+  .navbar__mobile-menu {
+    width: min(100% - 28px, var(--container));
+    margin: 0 auto 12px;
+    padding: 12px;
+    display: grid;
+    gap: 8px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: rgba(21, 19, 26, 0.94);
+  }
+
+  .navbar__mobile-menu a {
+    min-height: 42px;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    border-radius: var(--radius);
+    color: var(--muted-strong);
+    font-weight: 800;
+  }
+
+  .navbar__mobile-menu a:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text);
   }
 
   .section-heading h2,
@@ -1676,8 +1736,9 @@ textarea {
   }
 
   .blog-modal__controls {
-    right: 12px;
+    top: calc(50vh - 62px);
     width: 38px;
+    margin-left: calc(100% - 38px);
   }
 
   .blog-modal__controls button {

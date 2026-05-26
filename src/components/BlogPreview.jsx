@@ -307,11 +307,12 @@ function BlogPreview({ language, basePath = '', hub = false, limit, showArchiveL
               </button>
             </div>
 
-            <div className="blog-modal__feed">
+            <div className="blog-modal__feed" onMouseDown={handleClosePost}>
               {allPosts.map((post) => (
                 <article
                   className="blog-modal__post"
                   id={`devlog-modal-${post.slug}`}
+                  onMouseDown={(event) => event.stopPropagation()}
                   ref={(element) => {
                     postRefs.current[post.slug] = element
                   }}
