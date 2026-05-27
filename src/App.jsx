@@ -7,10 +7,98 @@ import Contact from './components/Contact'
 import Footer from './components/Footer'
 import ProjectPage from './components/ProjectPage'
 import { useEffect, useState } from 'react'
+import { projects } from './data/projects'
+import { getProjectPage } from './data/projectView'
+import { getUiText } from './data/i18n'
 import './styles/main.css'
 
 const supportedLanguages = ['ru', 'en', 'es']
 const defaultLanguage = 'ru'
+const siteOrigin = 'https://llyneuf.xyz'
+const defaultImage = `${siteOrigin}/og-image.png`
+
+const homeDescriptions = {
+  ru: 'Личный хаб Llyneuf: проекты, devlog, стримы, ссылки и творческая работа с играми, VTubing, 3D и вебом.',
+  en: 'Personal hub for Llyneuf projects, devlog, streams, links and creative work across games, VTubing, 3D and web.',
+  es: 'Hub personal de Llyneuf para proyectos, devlog, streams, enlaces y trabajo creativo entre juegos, VTubing, 3D y web.',
+}
+
+function setMetaAttribute(selector, attribute, value) {
+  const element = document.head.querySelector(selector)
+
+  if (element) {
+    element.setAttribute(attribute, value)
+  }
+}
+
+function getMetadata({ language, pathSegments }) {
+  const t = getUiText(language)
+  const pagePath = pathSegments.length > 0 ? `/${pathSegments.join('/')}` : '/'
+  const canonicalPath = `/${language}${pagePath}`.replace(/\/+$/, '/') || `/${language}/`
+  const alternates = supportedLanguages.map((item) => ({
+    language: item,
+    href: `${siteOrigin}${`/${item}${pagePath}`.replace(/\/+$/, '/') || `/${item}/`}`,
+  }))
+
+  if (pathSegments[0] === 'projects' && pathSegments[1]) {
+    const project = projects.find((item) => item.slug === pathSegments[1])
+
+    if (project) {
+      const page = getProjectPage(project, language)
+
+      return {
+        title: `${page.title} | Llyneuf`,
+        description: page.summary || `${page.title} project page on the Llyneuf site.`,
+        url: `${siteOrigin}${canonicalPath}`,
+        alternates,
+      }
+    }
+  }
+
+  if (pathSegments[0] === 'projects') {
+    return {
+      title: `${t.allProjects} | Llyneuf`,
+      description: t.projectsHubDescription,
+      url: `${siteOrigin}${canonicalPath}`,
+      alternates,
+    }
+  }
+
+  if (pathSegments[0] === 'devlog') {
+    return {
+      title: `${t.devlogHubTitle} | Llyneuf`,
+      description: t.devlogHubDescription,
+      url: `${siteOrigin}${canonicalPath}`,
+      alternates,
+    }
+  }
+
+  return {
+    title: 'Llyneuf',
+    description: homeDescriptions[language] ?? homeDescriptions.ru,
+    url: `${siteOrigin}${canonicalPath}`,
+    alternates,
+  }
+}
+
+function updateDocumentMetadata(metadata) {
+  document.title = metadata.title
+  setMetaAttribute('meta[name="description"]', 'content', metadata.description)
+  setMetaAttribute('meta[property="og:title"]', 'content', metadata.title)
+  setMetaAttribute('meta[property="og:description"]', 'content', metadata.description)
+  setMetaAttribute('meta[property="og:url"]', 'content', metadata.url)
+  setMetaAttribute('meta[property="og:image"]', 'content', defaultImage)
+  setMetaAttribute('meta[name="twitter:title"]', 'content', metadata.title)
+  setMetaAttribute('meta[name="twitter:description"]', 'content', metadata.description)
+  setMetaAttribute('meta[name="twitter:image"]', 'content', defaultImage)
+  setMetaAttribute('link[rel="canonical"]', 'href', metadata.url)
+
+  metadata.alternates.forEach((alternate) => {
+    setMetaAttribute(`link[rel="alternate"][hreflang="${alternate.language}"]`, 'href', alternate.href)
+  })
+
+  setMetaAttribute('link[rel="alternate"][hreflang="x-default"]', 'href', metadata.alternates[0].href)
+}
 
 function getRoute() {
   const segments = window.location.pathname.split('/').filter(Boolean)
@@ -111,6 +199,10 @@ function App() {
   const isDevlogHub = route.pathSegments.length === 1 && route.pathSegments[0] === 'devlog'
   const projectSlug =
     route.pathSegments.length === 2 && route.pathSegments[0] === 'projects' ? route.pathSegments[1] : null
+
+  useEffect(() => {
+    updateDocumentMetadata(getMetadata(route))
+  }, [route])
 
   if (isProjectsHub) {
     return (

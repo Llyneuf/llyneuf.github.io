@@ -345,6 +345,14 @@ textarea {
     drop-shadow(0 0 28px rgba(240, 200, 211, 0.1));
 }
 
+.hero-title__fallback {
+  margin: 0;
+  color: var(--text);
+  font-size: clamp(4.5rem, 18vw, 13rem);
+  line-height: 0.88;
+  transform: translateY(-6vh);
+}
+
 .hero-intro {
   padding-top: 72px;
 }
@@ -1706,6 +1714,11 @@ textarea {
     width: 92vw;
     max-width: 380px;
     transform: translateY(calc(-4vh + var(--hero-lag, 0px)));
+  }
+
+  .hero-title__fallback {
+    font-size: clamp(4rem, 21vw, 6.8rem);
+    transform: translateY(-4vh);
   }
 
   .hero__text h1 {

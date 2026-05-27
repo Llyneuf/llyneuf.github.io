@@ -4,6 +4,7 @@ import { getUiText } from '../data/i18n'
 function Hero({ language, basePath }) {
   const t = getUiText(language)
   const [scrollLag, setScrollLag] = useState(0)
+  const [titleImageFailed, setTitleImageFailed] = useState(false)
 
   useEffect(() => {
     let frameId = 0
@@ -33,12 +34,17 @@ function Hero({ language, basePath }) {
   return (
     <>
       <section className="hero-title section" aria-label="Llyneuf">
-        <img
-          src="/title.png"
-          alt="Llyneuf"
-          className="hero-title__image"
-          style={{ '--hero-lag': `${scrollLag}px` }}
-        />
+        {titleImageFailed ? (
+          <h1 className="hero-title__fallback">Llyneuf</h1>
+        ) : (
+          <img
+            src="/title.png"
+            alt="Llyneuf"
+            className="hero-title__image"
+            style={{ '--hero-lag': `${scrollLag}px` }}
+            onError={() => setTitleImageFailed(true)}
+          />
+        )}
       </section>
 
       <section id="about" className="hero-intro section">
