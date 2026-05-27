@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "editor": "node tools/editor/server.js",
-    "build": "vite build",
+    "build": "vite build && node tools/generate-static-routes.js",
     "lint": "eslint .",
     "preview": "vite preview",
     "predeploy": "npm run build",
