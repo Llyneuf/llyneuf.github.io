@@ -1642,15 +1642,20 @@ textarea {
   }
 
   .navbar__mobile-toggle {
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     display: grid;
     place-items: center;
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    background: rgba(255, 255, 255, 0.04);
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
     color: var(--text);
     cursor: pointer;
+  }
+
+  .navbar__mobile-toggle:hover,
+  .navbar__mobile-toggle:focus-visible {
+    background: rgba(255, 255, 255, 0.055);
   }
 
   .navbar__mobile-languages {
