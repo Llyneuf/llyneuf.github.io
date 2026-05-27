@@ -1,5 +1,5 @@
 import { createServer } from 'node:http'
-import { readFile, readdir, writeFile } from 'node:fs/promises'
+import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises'
 import { extname, join, normalize, relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import process from 'node:process'
@@ -9,6 +9,7 @@ const __dirname = fileURLToPath(new URL('.', import.meta.url))
 const rootDir = resolve(__dirname, '../..')
 const editorDir = resolve(__dirname, 'static')
 const projectContentDir = resolve(rootDir, 'src/content/projects')
+const devlogContentDir = resolve(rootDir, 'src/content/devlog')
 const publicDir = resolve(rootDir, 'public')
 const port = Number.parseInt(process.env.PORT ?? '5174', 10)
 const supportedLanguages = ['ru', 'en', 'es']
@@ -52,6 +53,10 @@ function isProjectSlug(slug) {
   return true
 }
 
+function isDevlogSlug(slug) {
+  return /^\d{2}-\d{2}-\d{4}$/.test(slug)
+}
+
 function getProjectPath(slug, language = defaultLanguage) {
   if (!isProjectSlug(slug) || !supportedLanguages.includes(language)) {
     return null
@@ -59,6 +64,15 @@ function getProjectPath(slug, language = defaultLanguage) {
 
   const filePath = resolve(projectContentDir, slug, `${language}.md`)
   return isInside(projectContentDir, filePath) ? filePath : null
+}
+
+function getDevlogPath(slug, language = defaultLanguage) {
+  if (!isDevlogSlug(slug) || !supportedLanguages.includes(language)) {
+    return null
+  }
+
+  const filePath = resolve(devlogContentDir, slug, `${language}.md`)
+  return isInside(devlogContentDir, filePath) ? filePath : null
 }
 
 function parseScalar(value) {
@@ -208,6 +222,86 @@ function serializeProject(data, body) {
   return lines.join('\n')
 }
 
+function serializeDevlog(data, body) {
+  const orderedKeys = [
+    'slug',
+    'date',
+    'cardTitle',
+    'cardType',
+    'cardSummary',
+    'cardImage',
+    'cardImageFit',
+    'cardImagePosition',
+    'cardImageScale',
+    'cardImageAlt',
+    'pageTitle',
+    'pageType',
+    'pageImage',
+    'pageImageFit',
+    'pageImagePosition',
+    'pageImageScale',
+    'pageImageAlt',
+  ]
+  const extraKeys = Object.keys(data).filter((key) => !orderedKeys.includes(key)).sort()
+  const keys = [...orderedKeys, ...extraKeys].filter((key) => Object.prototype.hasOwnProperty.call(data, key))
+  const lines = ['---']
+
+  keys.forEach((key) => {
+    const value = data[key]
+
+    if (Array.isArray(value)) {
+      if (value.length === 0) {
+        lines.push(`${key}: []`)
+        return
+      }
+
+      lines.push(`${key}:`)
+      value.forEach((item) => {
+        lines.push(`  - ${yamlValue(item)}`)
+      })
+      return
+    }
+
+    lines.push(`${key}: ${yamlValue(value)}`)
+  })
+
+  lines.push('---', '', body.trim(), '')
+  return lines.join('\n')
+}
+
+function createDevlogTemplate(folder, language) {
+  const title = language === 'ru' ? 'Новая запись devlog' : language === 'es' ? 'Nueva entrada de devlog' : 'New devlog entry'
+  const summary =
+    language === 'ru'
+      ? 'Короткое описание обновления.'
+      : language === 'es'
+        ? 'Breve resumen de la actualización.'
+        : 'Short update summary.'
+  const body =
+    language === 'ru'
+      ? '## Что изменилось\n\n- \n'
+      : language === 'es'
+        ? '## Cambios\n\n- \n'
+        : '## Changes\n\n- \n'
+
+  return serializeDevlog(
+    {
+      slug: folder,
+      date: folder,
+      cardTitle: title,
+      cardType: 'Devlog',
+      cardSummary: summary,
+      cardImage: '',
+      cardImageAlt: title,
+      pageTitle: title,
+      pageType: 'Devlog',
+      pageImage: '',
+      pageImageAlt: title,
+    },
+    body,
+  )
+}
+
 async function readRequestBody(req) {
   const chunks = []
 
@@ -282,6 +376,38 @@ async function listProjects(res) {
   sendJson(res, 200, { projects })
 }
 
+async function listDevlogs(res) {
+  const entries = await readdir(devlogContentDir, { withFileTypes: true })
+  const devlogs = await Promise.all(
+    entries
+      .filter((entry) => entry.isDirectory() && isDevlogSlug(entry.name))
+      .map((entry) => entry.name)
+      .sort()
+      .reverse()
+      .map(async (slug) => {
+        const devlogDir = join(devlogContentDir, slug)
+        const files = await readdir(devlogDir)
+        const languages = files
+          .filter((file) => file.endsWith('.md'))
+          .map((file) => file.replace(/\.md$/, ''))
+          .filter((language) => supportedLanguages.includes(language))
+          .sort((a, b) => supportedLanguages.indexOf(a) - supportedLanguages.indexOf(b))
+        const previewLanguage = languages.includes(defaultLanguage) ? defaultLanguage : languages[0]
+        const content = await readFile(join(devlogDir, `${previewLanguage}.md`), 'utf-8')
+        const { data } = parseFrontmatter(content)
+
+        return {
+          slug,
+          languages,
+          title: data.cardTitle || data.pageTitle || data.slug || slug,
+          status: data.cardType || data.pageType || data.date || '',
+        }
+      }),
+  )
+
+  sendJson(res, 200, { devlogs })
+}
+
 async function getProject(res, slug, language = defaultLanguage) {
   const filePath = getProjectPath(slug, language)
 
@@ -330,6 +456,94 @@ async function saveProject(req, res, slug, language = defaultLanguage) {
   }
 }
 
+async function getDevlog(res, slug, language = defaultLanguage) {
+  const filePath = getDevlogPath(slug, language)
+
+  if (!filePath) {
+    sendJson(res, 400, { error: 'Invalid devlog slug or language.' })
+    return
+  }
+
+  try {
+    const raw = await readFile(filePath, 'utf-8')
+    const parsed = parseFrontmatter(raw)
+    sendJson(res, 200, {
+      slug,
+      language,
+      raw,
+      data: parsed.data,
+      body: parsed.body,
+    })
+  } catch {
+    sendJson(res, 404, { error: 'Devlog language file not found.' })
+  }
+}
+
+async function saveDevlog(req, res, slug, language = defaultLanguage) {
+  const filePath = getDevlogPath(slug, language)
+
+  if (!filePath) {
+    sendJson(res, 400, { error: 'Invalid devlog slug or language.' })
+    return
+  }
+
+  try {
+    const payload = JSON.parse(await readRequestBody(req))
+    const nextContent = serializeDevlog(payload.data ?? {}, payload.body ?? '')
+    await writeFile(filePath, nextContent, 'utf-8')
+    sendJson(res, 200, {
+      ok: true,
+      slug,
+      language,
+      savedAt: new Date().toISOString(),
+    })
+  } catch (error) {
+    sendJson(res, 400, {
+      error: error instanceof Error ? error.message : 'Could not save devlog.',
+    })
+  }
+}
+
+async function createDevlog(req, res) {
+  try {
+    const payload = JSON.parse(await readRequestBody(req))
+    const folder = payload.folder
+
+    if (!isDevlogSlug(folder)) {
+      sendJson(res, 400, { error: 'Devlog folder must use DD-MM-YYYY format.' })
+      return
+    }
+
+    const devlogDir = resolve(devlogContentDir, folder)
+
+    if (!isInside(devlogContentDir, devlogDir)) {
+      sendJson(res, 400, { error: 'Invalid devlog folder.' })
+      return
+    }
+
+    await mkdir(devlogDir, { recursive: false })
+    await Promise.all(
+      supportedLanguages.map((language) =>
+        writeFile(join(devlogDir, `${language}.md`), createDevlogTemplate(folder, language), {
+          encoding: 'utf-8',
+          flag: 'wx',
+        }),
+      ),
+    )
+
+    sendJson(res, 201, {
+      ok: true,
+      slug: folder,
+      languages: supportedLanguages,
+      createdAt: new Date().toISOString(),
+    })
+  } catch (error) {
+    sendJson(res, 400, {
+      error: error instanceof Error ? error.message : 'Could not create devlog.',
+    })
+  }
+}
+
 async function listAssets(res) {
   const files = await readdir(publicDir)
   const assets = files
@@ -350,6 +564,16 @@ const server = createServer(async (req, res) => {
       return
     }
 
+    if (req.method === 'GET' && pathname === '/api/devlogs') {
+      await listDevlogs(res)
+      return
+    }
+
+    if (req.method === 'POST' && pathname === '/api/devlogs') {
+      await createDevlog(req, res)
+      return
+    }
+
     if (req.method === 'GET' && pathname === '/api/assets') {
       await listAssets(res)
       return
@@ -364,6 +588,18 @@ const server = createServer(async (req, res) => {
 
     if (projectMatch && req.method === 'PUT') {
       await saveProject(req, res, projectMatch[1], projectMatch[2] ?? defaultLanguage)
+      return
+    }
+
+    const devlogMatch = pathname.match(/^\/api\/devlogs\/(\d{2}-\d{2}-\d{4})(?:\/([a-z]{2}))?$/)
+
+    if (devlogMatch && req.method === 'GET') {
+      await getDevlog(res, devlogMatch[1], devlogMatch[2] ?? defaultLanguage)
+      return
+    }
+
+    if (devlogMatch && req.method === 'PUT') {
+      await saveDevlog(req, res, devlogMatch[1], devlogMatch[2] ?? defaultLanguage)
       return
     }
 

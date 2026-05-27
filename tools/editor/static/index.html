@@ -10,17 +10,27 @@
     <div class="editor-shell">
       <aside class="sidebar">
         <div class="sidebar__header">
-          <span>Content</span>
-          <strong>Projects</strong>
+          <span>Content editor</span>
+          <strong>Llyneuf site</strong>
         </div>
-        <div id="projectList" class="project-list" aria-label="Project list"></div>
+
+        <div class="content-tabs" aria-label="Content type">
+          <button id="projectsTab" type="button" class="content-tab is-active" data-type="projects">Projects</button>
+          <button id="devlogsTab" type="button" class="content-tab" data-type="devlogs">Devlog</button>
+        </div>
+
+        <div id="newDevlogBox" class="sidebar-action is-hidden">
+          <button id="newDevlogButton" type="button">New devlog</button>
+        </div>
+
+        <div id="contentList" class="content-list" aria-label="Content list"></div>
       </aside>
 
       <main class="workspace">
         <header class="toolbar">
           <div>
-            <span id="currentSlug" class="toolbar__slug">No project selected</span>
-            <h1>Project editor</h1>
+            <span id="currentSlug" class="toolbar__slug">No item selected</span>
+            <h1 id="editorTitle">Project editor</h1>
           </div>
           <div class="toolbar__actions">
             <label class="language-select">
@@ -32,30 +42,107 @@
               </select>
             </label>
             <span id="saveState" class="save-state">Idle</span>
+            <a id="liveCurrentLink" class="live-link" href="#" target="_blank" rel="noreferrer">Open live</a>
+            <button id="translationModeButton" type="button" class="button--muted">Translate</button>
             <button id="saveButton" type="button">Save</button>
           </div>
         </header>
 
+        <section id="translationPanel" class="translation-panel is-hidden" aria-label="Translation editor">
+          <div class="translation-panel__bar">
+            <label class="language-select">
+              Source
+              <select id="sourceLanguageSelect">
+                <option value="ru">RU</option>
+                <option value="en">EN</option>
+                <option value="es">ES</option>
+              </select>
+            </label>
+            <label class="language-select">
+              Target
+              <select id="targetLanguageSelect">
+                <option value="en">EN</option>
+                <option value="ru">RU</option>
+                <option value="es">ES</option>
+              </select>
+            </label>
+            <button id="copyAllButton" type="button" class="button--muted">Copy all from source</button>
+            <button id="copyMissingButton" type="button" class="button--muted">Copy missing fields</button>
+            <button id="copyStructureButton" type="button" class="button--muted">Copy markdown structure</button>
+            <button id="saveTranslationButton" type="button">Save target</button>
+          </div>
+
+          <div class="translation-panel__status">
+            <span id="translationProgress">0/0 fields filled</span>
+            <div class="translation-panel__links">
+              <a id="sourceLiveLink" href="#" target="_blank" rel="noreferrer">Open source</a>
+              <a id="targetLiveLink" href="#" target="_blank" rel="noreferrer">Open target</a>
+            </div>
+          </div>
+
+          <div class="translation-grid">
+            <section class="translation-column">
+              <div class="preview-section__heading">
+                <span>Read only</span>
+                <h2 id="sourceTranslationTitle">Source</h2>
+              </div>
+              <div id="translationSourceFields" class="translation-fields"></div>
+            </section>
+
+            <section class="translation-column">
+              <div class="preview-section__heading">
+                <span>Editable</span>
+                <h2 id="targetTranslationTitle">Target</h2>
+              </div>
+              <div id="translationTargetFields" class="translation-fields"></div>
+            </section>
+          </div>
+        </section>
+
         <section class="editor-grid">
-          <form id="projectForm" class="form-panel">
-            <section class="form-section">
-              <h2>Card</h2>
+          <form id="contentForm" class="form-panel">
+            <section id="devlogMetaSection" class="form-section is-hidden">
+              <h2>Devlog metadata</h2>
+              <div class="field-row">
+                <label>
+                  URL slug
+                  <input id="slugInput" name="slug" type="text" autocomplete="off" />
+                </label>
+
+                <label>
+                  Date
+                  <input id="dateInput" name="date" type="text" autocomplete="off" placeholder="26-05-2026" />
+                </label>
+              </div>
+            </section>
+
+            <section id="cardSection" class="form-section">
+              <h2 id="cardSectionTitle">Homepage card</h2>
+              <p class="section-note">This is the compact card shown on the homepage and hub lists.</p>
+
               <label>
                 Card title
                 <input id="cardTitleInput" name="cardTitle" type="text" autocomplete="off" />
               </label>
 
-              <label>
-                Card status
-                <input id="cardStatusInput" name="cardStatus" type="text" autocomplete="off" />
-              </label>
+              <div class="field-row">
+                <label id="cardStatusLabel">
+                  Card status
+                  <input id="cardStatusInput" name="cardStatus" type="text" autocomplete="off" />
+                </label>
+
+                <label id="cardTypeLabel" class="is-hidden">
+                  Card type
+                  <input id="cardTypeInput" name="cardType" type="text" autocomplete="off" />
+                </label>
+              </div>
 
               <label>
                 Card summary
                 <textarea id="cardSummaryInput" name="cardSummary" rows="3"></textarea>
               </label>
 
-              <label>
+              <label id="cardProgressLabel">
                 Card progress
                 <textarea id="cardProgressInput" name="cardProgress" rows="3"></textarea>
               </label>
@@ -72,57 +159,100 @@
                 </label>
               </div>
 
-              <label>
+              <div id="cardImageControls" class="field-row is-hidden">
+                <label>
+                  Card image fit
+                  <input id="cardImageFitInput" name="cardImageFit" type="text" autocomplete="off" placeholder="cover / contain" />
+                </label>
+
+                <label>
+                  Card image position
+                  <input id="cardImagePositionInput" name="cardImagePosition" type="text" autocomplete="off" placeholder="center 35%" />
+                </label>
+
+                <label>
+                  Card image scale
+                  <input id="cardImageScaleInput" name="cardImageScale" type="text" autocomplete="off" placeholder="1" />
+                </label>
+              </div>
+
+              <label id="cardTagsLabel">
                 Card tags
                 <textarea id="cardTagsInput" name="cardTags" rows="4" placeholder="One tag per line. Use [] to remove all tags."></textarea>
               </label>
 
-              <label>
+              <label id="cardDetailsLabel">
                 Card details
                 <textarea id="cardDetailsInput" name="cardDetails" rows="5" placeholder="One detail per line."></textarea>
               </label>
             </section>
 
             <section class="form-section">
-              <h2>Project page</h2>
-            <label>
-              Page title
-              <input id="pageTitleInput" name="pageTitle" type="text" autocomplete="off" />
-            </label>
-
-            <label>
-              Page status
-              <input id="pageStatusInput" name="pageStatus" type="text" autocomplete="off" />
-            </label>
-
-            <label>
-              Page summary
-              <textarea id="pageSummaryInput" name="pageSummary" rows="3"></textarea>
-            </label>
-
-            <label>
-              Page progress
-              <textarea id="pageProgressInput" name="pageProgress" rows="3"></textarea>
-            </label>
-
-            <div class="field-row">
-              <label>
-                Page image
-                <input id="pageImageInput" name="pageImage" type="text" list="assetList" autocomplete="off" />
-              </label>
+              <h2 id="pageSectionTitle">Project page</h2>
+              <p class="section-note">This is the full page or modal content readers see after opening the item.</p>
 
               <label>
-                Page image alt
-                <input id="pageImageAltInput" name="pageImageAlt" type="text" autocomplete="off" />
+                Page title
+                <input id="pageTitleInput" name="pageTitle" type="text" autocomplete="off" />
               </label>
-            </div>
 
-            <datalist id="assetList"></datalist>
+              <div class="field-row">
+                <label id="pageStatusLabel">
+                  Page status
+                  <input id="pageStatusInput" name="pageStatus" type="text" autocomplete="off" />
+                </label>
 
-            <label>
-              Page tags
-              <textarea id="pageTagsInput" name="pageTags" rows="4" placeholder="One tag per line. Use [] to remove all tags."></textarea>
-            </label>
+                <label id="pageTypeLabel" class="is-hidden">
+                  Page type
+                  <input id="pageTypeInput" name="pageType" type="text" autocomplete="off" />
+                </label>
+              </div>
+
+              <label>
+                Page summary
+                <textarea id="pageSummaryInput" name="pageSummary" rows="3"></textarea>
+              </label>
+
+              <label id="pageProgressLabel">
+                Page progress
+                <textarea id="pageProgressInput" name="pageProgress" rows="3"></textarea>
+              </label>
+
+              <div class="field-row">
+                <label>
+                  Page image
+                  <input id="pageImageInput" name="pageImage" type="text" list="assetList" autocomplete="off" />
+                </label>
+
+                <label>
+                  Page image alt
+                  <input id="pageImageAltInput" name="pageImageAlt" type="text" autocomplete="off" />
+                </label>
+              </div>
+
+              <div id="pageImageControls" class="field-row is-hidden">
+                <label>
+                  Page image fit
+                  <input id="pageImageFitInput" name="pageImageFit" type="text" autocomplete="off" placeholder="cover / contain" />
+                </label>
+
+                <label>
+                  Page image position
+                  <input id="pageImagePositionInput" name="pageImagePosition" type="text" autocomplete="off" placeholder="center 35%" />
+                </label>
+
+                <label>
+                  Page image scale
+                  <input id="pageImageScaleInput" name="pageImageScale" type="text" autocomplete="off" placeholder="1" />
+                </label>
+              </div>
+
+              <datalist id="assetList"></datalist>
+
+              <label id="pageTagsLabel">
+                Page tags
+                <textarea id="pageTagsInput" name="pageTags" rows="4" placeholder="One tag per line. Use [] to remove all tags."></textarea>
+              </label>
             </section>
 
             <label class="body-field">
@@ -131,18 +261,46 @@
             </label>
           </form>
 
-          <section class="preview-panel" aria-label="Project preview">
-            <div class="project-preview">
-              <div class="project-preview__copy">
-                <p id="previewStatus" class="eyebrow"></p>
-                <h2 id="previewTitle"></h2>
-                <p id="previewSummary" class="lead"></p>
-                <p id="previewProgress" class="progress"></p>
-                <div id="previewTags" class="tag-list"></div>
+          <section class="preview-panel" aria-label="Content preview">
+            <section class="preview-section">
+              <div class="preview-section__heading">
+                <span>Homepage / hub</span>
+                <h2 id="cardPreviewHeading">Card preview</h2>
               </div>
-              <img id="previewImage" class="project-preview__image" alt="" />
-            </div>
-            <div id="markdownPreview" class="markdown-preview"></div>
+              <article id="cardPreview" class="card-preview">
+                <img id="cardPreviewImage" class="card-preview__image" alt="" />
+                <div class="card-preview__content">
+                  <div class="card-preview__meta">
+                    <span id="cardPreviewIndex">01</span>
+                    <span id="cardPreviewStatus"></span>
+                  </div>
+                  <h3 id="cardPreviewTitle"></h3>
+                  <p id="cardPreviewSummary"></p>
+                  <p id="cardPreviewProgress" class="card-preview__progress"></p>
+                  <ul id="cardPreviewDetails" class="card-preview__details"></ul>
+                  <div id="cardPreviewTags" class="tag-list"></div>
+                  <span class="card-preview__open">Open item</span>
+                </div>
+              </article>
+            </section>
+
+            <section class="preview-section">
+              <div class="preview-section__heading">
+                <span>Full view</span>
+                <h2 id="pagePreviewHeading">Page preview</h2>
+              </div>
+              <div id="pagePreview" class="page-preview">
+                <div class="page-preview__copy">
+                  <p id="previewStatus" class="eyebrow"></p>
+                  <h2 id="previewTitle"></h2>
+                  <p id="previewSummary" class="lead"></p>
+                  <p id="previewProgress" class="progress"></p>
+                  <div id="previewTags" class="tag-list"></div>
+                </div>
+                <img id="previewImage" class="page-preview__image" alt="" />
+              </div>
+              <div id="markdownPreview" class="markdown-preview"></div>
+            </section>
           </section>
         </section>
       </main>
